@@ -3,7 +3,7 @@ import { CollisionCategories } from './configuration/collision-categories';
 import { Hitable } from './hitable';
 import { MineableConfig } from './mineable-config';
 import { MetaConfig } from './meta-config';
-import { ItemDrop } from './item-drop';
+import { ItemDropPool } from './item-drop-pool';
 
 export class Mineable extends Hitable {
 
@@ -19,6 +19,7 @@ export class Mineable extends Hitable {
     constructor(
         protected readonly scene: Phaser.Scene,
         protected readonly config: MineableConfig,
+        private readonly itemDropPool: ItemDropPool,
         x?: number,
         y?: number
     ) {
@@ -131,25 +132,17 @@ export class Mineable extends Hitable {
                 ease: 'Back.easeIn',
                 duration: 70,
                 yoyo: true,
-                repeat: 0,
-                onComplete: () => {
-                    /* if (this.hitpoints <= 0) {
-                        this.particleEmitter.explode(50, this.image.x, this.image.y);
-                        this.dropLoot();
-                        this.plopSound.play({ volume: 0.5 });
-                        this.image.destroy();
-                    } */
-                }
+                repeat: 0
             });
         }
     }
 
     private dropLoot(): void {
         this.lootDropKeys.forEach((key: string) => {
-            /* new ItemDrop(this.scene, key, this.image.x, this.image.y);
-            new ItemDrop(this.scene, key, this.image.x, this.image.y);
-            new ItemDrop(this.scene, key, this.image.x, this.image.y);
-            new ItemDrop(this.scene, key, this.image.x, this.image.y); */
+            this.itemDropPool.spawn(this.image.x, this.image.y, key);
+            this.itemDropPool.spawn(this.image.x, this.image.y, key);
+            this.itemDropPool.spawn(this.image.x, this.image.y, key);
+            this.itemDropPool.spawn(this.image.x, this.image.y, key);
         });
     }
 

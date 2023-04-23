@@ -1,4 +1,3 @@
-import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin';
 import { MetaConfig } from './meta-config';
 
 export class ItemDrop extends Phaser.Physics.Matter.Image {
@@ -10,10 +9,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         dropKey: string,
     ) {
         super(scene.matter.world, x, y, dropKey);
-console.log(dropKey);
 
-        // this.image = this.group.get(x, y, dropKey);
-        // this.image = this.scene.matter.add.image(x, y, dropKey);
         this.setBody({
             type: 'rectangle',
             width: this.width / 2,
@@ -31,6 +27,7 @@ console.log(dropKey);
         };
         this.setData('meta', metaConfig);
 
+        // This is too heavy on performance
         // OutlinePipelinePlugin
         /* const postFxPlugin = this.scene.plugins.get('rexOutlinePipeline') as OutlinePipelinePlugin;
         postFxPlugin.add(this, {
@@ -63,6 +60,14 @@ console.log(dropKey);
             },
             onComplete: () => {
                 this.depth = this.y;
+                this.scene.tweens.add({
+                    targets: this,
+                    props: { y: '-= 4'},
+                    duration: 1000,
+                    ease: 'Quad.easeInOut',
+                    yoyo: true,
+                    repeat: -1
+                });
             }
 
         });

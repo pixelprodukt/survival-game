@@ -2,11 +2,9 @@ import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-p
 import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
 import { STONE_CONFIG, TREE_CONFIG } from '../configuration/mineable-configurations';
 import { SceneKeys } from '../configuration/scene-keys';
-import { ItemDrop } from '../item-drop';
 import { MetaConfig } from '../meta-config';
 import { Mineable } from '../mineable';
 import { Player } from '../player';
-import { Tree } from '../tree';
 import { ItemDropPool } from '../item-drop-pool';
 
 export class OverworldScene extends Phaser.Scene {
@@ -21,8 +19,7 @@ export class OverworldScene extends Phaser.Scene {
     private keyTwo!: Phaser.Input.Keyboard.Key;
 
     private player!: Player;
-
-    group!: ItemDropPool;
+    private itemDropPool!: ItemDropPool;
 
     constructor() {
         super(SceneKeys.TEST);
@@ -43,22 +40,18 @@ export class OverworldScene extends Phaser.Scene {
         this.cameras.main.setLerp(0.05, 0.05);
         this.cameras.main.setZoom(SCALE);
 
-        // @ts-ignore
-        this.group = this.add.itemDropPool();
-
-        // console.log((2 >>> 0).toString(2));
-
-
+        const itemDropPoolInstance = new ItemDropPool(this);
+        this.itemDropPool = this.add.existing(itemDropPoolInstance);
         
-        new Mineable(this, TREE_CONFIG, 120, 40);
-        new Mineable(this, TREE_CONFIG, 20, 60);
-        new Mineable(this, TREE_CONFIG, 60, 30);
-        new Mineable(this, TREE_CONFIG, 80, 20);
-        new Mineable(this, TREE_CONFIG, 10, 50);
+        new Mineable(this, TREE_CONFIG, this.itemDropPool, 120, 40);
+        new Mineable(this, TREE_CONFIG, this.itemDropPool, 20, 60);
+        new Mineable(this, TREE_CONFIG, this.itemDropPool, 60, 30);
+        new Mineable(this, TREE_CONFIG, this.itemDropPool, 80, 20);
+        new Mineable(this, TREE_CONFIG, this.itemDropPool, 10, 50);
 
-        new Mineable(this, STONE_CONFIG, -30, -30);
-        new Mineable(this, STONE_CONFIG, 20, -40);
-        new Mineable(this, STONE_CONFIG, -48, -20);
+        new Mineable(this, STONE_CONFIG, this.itemDropPool, -30, -30);
+        new Mineable(this, STONE_CONFIG, this.itemDropPool, 20, -40);
+        new Mineable(this, STONE_CONFIG, this.itemDropPool, -48, -20);
 
 
         /* this.group = this.add.group({
@@ -67,14 +60,11 @@ export class OverworldScene extends Phaser.Scene {
         }); */
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
-            // new ItemDrop(this, 'wood_drop', pointer.worldX, pointer.worldY);
-            // this.createItemDrop('wood_drop', pointer.worldX, pointer.worldY);
-            // this.group.get(pointer.worldX, pointer.worldY);
+            /* this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
             this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
             this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
             this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
+            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop'); */
         });
 
         // this.matter.add.mouseSpring();
