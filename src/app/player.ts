@@ -65,7 +65,7 @@ export class Player {
 
         this.pickaxe = new Pickaxe(this.scene, this);
         // this.pickaxe.setVisible(false);
-        this.rifle = new Firearm(this.scene, this, RIFLE_CONFIG);
+        this.rifle = new Firearm(this.scene, this, ROCKETLAUNCHER_CONFIG);
         this.rifle.setVisible(false);
 
         this.equippedItem = this.pickaxe;
