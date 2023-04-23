@@ -1,0 +1,197 @@
+/* @font-face {
+    font-family: 'monogram';
+    src: url('./assets/fonts/monogram/ttf/monogram.ttf');
+}
+
+@font-face {
+    font-family: 'pixelmix-normal';
+    src: url('./assets/fonts/pixelmix/pixelmix.ttf');
+}
+
+@font-face {
+    font-family: 'pixelmix-bold';
+    src: url('./assets/fonts/pixelmix/pixelmix_bold.ttf');
+} */
+
+* {
+    box-sizing: border-box;
+}
+
+/* :root {
+    --game-width: 800px;
+    --game-height: 604px;
+} */
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #bfb5b3;
+    background-color: #272e2f;
+    font-family: 'monogram';
+    font-size: 40px;
+    overflow: hidden;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-column {}
+
+.game-container-column {
+    width: 800px;
+    height: var(--game-height);
+}
+
+.right-sidebar-column {
+    width: 380px;
+    height: var(--game-height);
+}
+
+.bottom-text-container {
+    width: 1180px;
+    height: 256px;
+}
+
+/* .border-ninepatch {
+    image-rendering: pixelated;
+    border-style: solid;
+    border-width: 4px;
+    border-image-slice: 4;
+    border-image-width: 4;
+    border-image-outset: 0;
+    border-image-source: url("./assets/border_ninepatch.png");
+} */
+
+#root {
+    position: relative;
+}
+
+#absolute-ui {
+    /* This will make the UI appear on top of the canvas */
+    display: flex;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--game-width);
+    height: var(--game-height);
+}
+
+
+/*==============================================
+    Notifications
+==============================================*/
+#notification {
+    pointer-events: all;
+    /* visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    transform: scale(0);
+    transition: all .25s ease-in-out; */
+    margin: auto auto;
+    max-width: 70%;
+}
+
+#notification.show {
+    visibility: visible;
+    z-index: 200;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.notification-selection-item {
+    padding: 0.05rem 0.4rem 0.1rem 0.4rem;
+}
+
+.notification-selection-item.active {
+    color: #22272a;
+    background-color: #bfb5b3;
+}
+
+hr.notification-line {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    border-style: solid;
+    border-width: 2px;
+}
+
+
+/*==============================================
+    Util
+==============================================*/
+.bg-dark {
+    background-color: #22272a;
+}
+
+.d-none {
+    display: none;
+}
+
+.d-block {
+    display: block;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.w-25 {
+    width: 25%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.mr-1 {
+    margin-right: .25rem;
+}
+
+.mr-4 {
+    margin-right: 1rem;
+}
+
+.p-1 {
+    padding: 0.25rem;
+}
+
+.p-2 {
+    padding: 0.5rem;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.p-5 {
+    padding: 1.5rem;
+}
+
+.disabled {
+    opacity: 0.7;
+}
+
+.text-right {
+    text-align: right;
+}

@@ -1,0 +1,81 @@
+import { Projectile } from './projectile';
+import { EquippableItem } from './equippable-item';
+import { FirearmConfig } from './firearm-config';
+import { Player } from './player';
+
+export class Firearm extends EquippableItem {
+
+    private mouseTarget: number = 180;
+    private muzzleSprite!: Phaser.GameObjects.Sprite;
+    private activeBullets: Projectile[] = [];
+    private spriteKey: string;
+    private fireRate: number;
+
+    constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfig) {
+        super(scene, parent, config);
+        
+        this.fireRate = config.fireRate || 300; // default
+        this.spriteKey = config.spriteKey;
+
+        this.scene.input.on('pointermove', (pointer: any) => {
+            this.mouseTarget = this.radiansToDegrees(
+                Math.atan2(
+                    pointer.worldY - this.y,
+                    pointer.worldX - this.x
+                )
+            );
+        });
+
+        this.muzzleSprite = this.scene.add.sprite(0, 0, this.spriteKey, 3);
+        this.muzzleSprite.setOrigin(config.muzzleOffset.x, config.muzzleOffset.y);
+
+        this.scene.anims.create({
+            key: this.spriteKey + 'MuzzleAnim',
+            frames: this.scene.anims.generateFrameNumbers(this.spriteKey, { frames: config.muzzleFrames }),
+            frameRate: 24,
+            repeat: 0,
+            showOnStart: true,
+            hideOnComplete: true
+        }) as Phaser.Animations.Animation;
+    }
+
+    override use(): void {        
+        if (this.canUse) {
+            this.canUse = false;
+            this.muzzleSprite.play(this.spriteKey + 'MuzzleAnim').depth = this.parent.y + 1;
+            this.spawnBullet(this.x, this.y);
+            this.useSound.play({ volume: 0.6 });
+            setTimeout(() => { this.canUse = true; }, this.fireRate);
+        }
+    }
+
+    override update(delta: number): void {
+        super.update(delta);
+        this.sprite.angle = this.mouseTarget;
+        this.muzzleSprite.x = this.x;
+        this.muzzleSprite.y = this.y;
+        this.muzzleSprite.angle = this.sprite.angle;
+
+        // TODO: Refactor! This will probably eat performance en mass
+        this.activeBullets.forEach((bullet: Projectile) => {
+            bullet.update(delta);
+        });
+        const copy = [...this.activeBullets];
+        copy.forEach((bullet: Projectile) => {
+            if (bullet.markForDestroy) {
+                const index = this.activeBullets.indexOf(bullet);
+                this.activeBullets.splice(index, 1);
+                bullet.destroy();
+            }
+        });        
+    }
+
+    private spawnBullet(x: number, y: number): void {
+        this.activeBullets.push(new Projectile(this.scene, this.config.spriteKey, { x, y }, this.sprite.angle, this.config.projectileConfig));
+    }
+
+    private radiansToDegrees(radians: number): number {
+        const pi = Math.PI;
+        return radians * (180 / pi);
+    }
+}
