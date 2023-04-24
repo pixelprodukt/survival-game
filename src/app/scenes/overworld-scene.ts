@@ -6,6 +6,7 @@ import { MetaConfig } from '../meta-config';
 import { Mineable } from '../mineable';
 import { Player } from '../player';
 import { ItemDropPool } from '../item-drop-pool';
+import { ProjectilePool } from '../projectile-pool';
 
 export class OverworldScene extends Phaser.Scene {
 
@@ -20,6 +21,8 @@ export class OverworldScene extends Phaser.Scene {
 
     private player!: Player;
     private itemDropPool!: ItemDropPool;
+    
+    public projectilePool!: ProjectilePool;
 
     constructor() {
         super(SceneKeys.TEST);
@@ -28,6 +31,14 @@ export class OverworldScene extends Phaser.Scene {
     preload(): void { }
 
     create(): void {
+        // Pools
+        const itemDropPoolInstance = new ItemDropPool(this);
+        this.itemDropPool = this.add.existing(itemDropPoolInstance);
+
+        const projectilePoolInstance = new ProjectilePool(this);
+        this.projectilePool = this.add.existing(projectilePoolInstance);
+
+        // init
         this.initKeys();
         this.matter.world.disableGravity();
         this.matter.world.drawDebug = false;
@@ -40,9 +51,9 @@ export class OverworldScene extends Phaser.Scene {
         this.cameras.main.setLerp(0.05, 0.05);
         this.cameras.main.setZoom(SCALE);
 
-        const itemDropPoolInstance = new ItemDropPool(this);
-        this.itemDropPool = this.add.existing(itemDropPoolInstance);
         
+
+        // Test Minables
         new Mineable(this, TREE_CONFIG, this.itemDropPool, 120, 40);
         new Mineable(this, TREE_CONFIG, this.itemDropPool, 20, 60);
         new Mineable(this, TREE_CONFIG, this.itemDropPool, 60, 30);
@@ -53,11 +64,6 @@ export class OverworldScene extends Phaser.Scene {
         new Mineable(this, STONE_CONFIG, this.itemDropPool, 20, -40);
         new Mineable(this, STONE_CONFIG, this.itemDropPool, -48, -20);
 
-
-        /* this.group = this.add.group({
-            defaultKey: 'wood_drop',
-            maxSize: 1000
-        }); */
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
             /* this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');

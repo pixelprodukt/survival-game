@@ -9,7 +9,7 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
 			maxSize: -1
 		}
 
-		super(scene, Object.assign(defaults, config))
+		super(scene, Object.assign(defaults, config));
 	}
 
     spawn(x = 0, y = 0, key: string = 'wood_drop'): void {

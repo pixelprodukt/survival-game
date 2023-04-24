@@ -2,6 +2,8 @@ import { Projectile } from './projectile';
 import { EquippableItem } from './equippable-item';
 import { FirearmConfig } from './firearm-config';
 import { Player } from './player';
+import { ProjectilePool } from './projectile-pool';
+import { OverworldScene } from './scenes/overworld-scene';
 
 export class Firearm extends EquippableItem {
 
@@ -11,9 +13,13 @@ export class Firearm extends EquippableItem {
     private spriteKey: string;
     private fireRate: number;
 
+    private projectilePool!: ProjectilePool;
+
     constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfig) {
         super(scene, parent, config);
-        
+
+        this.projectilePool = (scene as OverworldScene).projectilePool;
+
         this.fireRate = config.fireRate || 300; // default
         this.spriteKey = config.spriteKey;
 
@@ -39,11 +45,11 @@ export class Firearm extends EquippableItem {
         }) as Phaser.Animations.Animation;
     }
 
-    override use(): void {        
+    override use(): void {
         if (this.canUse) {
             this.canUse = false;
             this.muzzleSprite.play(this.spriteKey + 'MuzzleAnim').depth = this.parent.y + 1;
-            this.spawnBullet(this.x, this.y);
+            this.spawnProjectile(this.x, this.y);
             this.useSound.play({ volume: 0.6 });
             setTimeout(() => { this.canUse = true; }, this.fireRate);
         }
@@ -57,21 +63,41 @@ export class Firearm extends EquippableItem {
         this.muzzleSprite.angle = this.sprite.angle;
 
         // TODO: Refactor! This will probably eat performance en mass
+        // Actually it seems ok. But mark for later refactor maybe
         this.activeBullets.forEach((bullet: Projectile) => {
             bullet.update(delta);
         });
+
         const copy = [...this.activeBullets];
         copy.forEach((bullet: Projectile) => {
             if (bullet.markForDestroy) {
                 const index = this.activeBullets.indexOf(bullet);
                 this.activeBullets.splice(index, 1);
-                bullet.destroy();
+                this.projectilePool.despawn(bullet);
             }
-        });        
+        });
     }
 
-    private spawnBullet(x: number, y: number): void {
-        this.activeBullets.push(new Projectile(this.scene, this.config.spriteKey, { x, y }, this.sprite.angle, this.config.projectileConfig));
+    private spawnProjectile(x: number, y: number): void {
+        const radians = this.degreesToRadians(this.sprite.angle);
+        const distanceToCenter = this.config.projectileConfig.distanceToCenter;
+        const spawnAroundWeaponX = (Math.cos(radians) * distanceToCenter) + x;
+        const spawnAroundWeaponY = (Math.sin(radians) * distanceToCenter) + y;
+
+        this.activeBullets.push(
+            this.projectilePool.spawn(
+                spawnAroundWeaponX,
+                spawnAroundWeaponY,
+                this.config.spriteKey,
+                this.sprite.angle,
+                this.config.projectileConfig
+            )
+        );
+    }
+
+    private degreesToRadians(degrees: number): number {
+        var pi = Math.PI;
+        return degrees * (pi / 180);
     }
 
     private radiansToDegrees(radians: number): number {
