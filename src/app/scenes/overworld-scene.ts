@@ -66,11 +66,11 @@ export class OverworldScene extends Phaser.Scene {
 
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
-            /* this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.group.spawn(pointer.worldX, pointer.worldY, 'wood_drop'); */
+            /* this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
+            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
+            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
+            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
+            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop'); */
         });
 
         // this.matter.add.mouseSpring();

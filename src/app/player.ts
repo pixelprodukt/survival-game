@@ -58,7 +58,7 @@ export class Player {
 
         // Collision Setup
         this.playerSprite.setCollisionCategory(CollisionCategories.PLAYER)
-        this.playerSprite.setCollidesWith([CollisionCategories.RESOURCE_OBJECT]);
+        this.playerSprite.setCollidesWith([CollisionCategories.RESOURCE_OBJECT, CollisionCategories.ITEM_DROP]);
 
         this.initAnimations();
         this.walkSounds = [this.scene.sound.add('step01'), this.scene.sound.add('step02'), this.scene.sound.add('step03')];

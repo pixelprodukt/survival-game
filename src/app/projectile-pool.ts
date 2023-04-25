@@ -29,7 +29,6 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
 
     despawn(projectile: Projectile): void {
         projectile.unset();
-
         projectile.setActive(false);
         projectile.setVisible(false);
     }

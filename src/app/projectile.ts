@@ -15,14 +15,15 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
 
     constructor(
         public readonly scene: Phaser.Scene,
-        x: number,
-        y: number,
+        public x: number,
+        public y: number,
         private readonly weaponSpritesheetKey: string
     ) {
         super(scene.matter.world, x, y, weaponSpritesheetKey, 2);
     }
 
     init(x: number, y: number, angle: number, config: ProjectileConfig): void {
+        this.setTexture(this.weaponSpritesheetKey, 2);
         this.config = config;
         this.speed = config.speed;
         this.timeToLive = config.timeToLive;
@@ -34,7 +35,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
         this.angle = angle;
 
         // Collision Setup
-        this.setCollisionCategory(CollisionCategories.PLAYER_PROJECTILE)
+        this.setCollisionCategory(CollisionCategories.PLAYER_PROJECTILE);
         this.setCollidesWith([CollisionCategories.RESOURCE_OBJECT, CollisionCategories.HITABLE]);
 
         const worldXY = this.scene.input.activePointer.positionToCamera(this.scene.cameras.main) as Phaser.Math.Vector2;

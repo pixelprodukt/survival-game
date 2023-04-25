@@ -17,23 +17,19 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
 		const spawnExisting = this.countActive(false) > 0;
 		const drop = super.get(x, y, key);
 
-		if (!drop) {            
-			return;
-		}
-
+        drop.init(key, this.despawn);
+        
 		if (spawnExisting) {
 			drop.setActive(true);
 			drop.setVisible(true);
-			drop.world.add(drop.body);
 		}
 
 		return drop;
 	}
 
 	despawn(drop: ItemDrop): void {
+        drop.unset();
 		drop.setActive(false);
 		drop.setVisible(false);
-		drop.removeInteractive();
-		drop.world.remove(drop.body);
 	}
 }
