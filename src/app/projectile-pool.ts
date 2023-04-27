@@ -8,7 +8,6 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
             classType: Projectile,
             maxSize: -1
         }
-
         super(scene, Object.assign(defaults, config));
     }
 
@@ -28,7 +27,7 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
     }
 
     despawn(projectile: Projectile): void {
-        projectile.unset();
+        projectile.reset();
         projectile.setActive(false);
         projectile.setVisible(false);
     }
