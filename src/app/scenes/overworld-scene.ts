@@ -5,9 +5,9 @@ import { SceneKeys } from '../configuration/scene-keys';
 import { MetaConfig } from '../meta-config';
 import { Mineable } from '../mineable';
 import { Player } from '../player';
-import { ItemDropPool } from '../item-drop-pool';
-import { ProjectilePool } from '../projectile-pool';
-import { MineablePool } from '../mineable-pool';
+import { ItemDropPool } from '../pools/item-drop-pool';
+import { MineablePool } from '../pools/mineable-pool';
+import { ProjectilePool } from '../pools/projectile-pool';
 
 export class OverworldScene extends Phaser.Scene {
 
@@ -71,15 +71,6 @@ export class OverworldScene extends Phaser.Scene {
         this.mineablePool.spawn(20, -40, STONE_CONFIG, this.itemDropPool);
         this.mineablePool.spawn(-48, -20, STONE_CONFIG, this.itemDropPool);
 
-        /* new Mineable(this, TREE_CONFIG, this.itemDropPool, 120, 40);
-        new Mineable(this, TREE_CONFIG, this.itemDropPool, 20, 60);
-        new Mineable(this, TREE_CONFIG, this.itemDropPool, 60, 30);
-        new Mineable(this, TREE_CONFIG, this.itemDropPool, 80, 20);
-        new Mineable(this, TREE_CONFIG, this.itemDropPool, 10, 50);
-
-        new Mineable(this, STONE_CONFIG, this.itemDropPool, -30, -30);
-        new Mineable(this, STONE_CONFIG, this.itemDropPool, 20, -40);
-        new Mineable(this, STONE_CONFIG, this.itemDropPool, -48, -20); */
 
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
@@ -163,65 +154,5 @@ export class OverworldScene extends Phaser.Scene {
         if (this.keyTwo.isDown) {
             this.player.equipItem('pickaxe');
         }
-    }
-
-    private createItemDrop(dropKey: string, x: number, y: number): void {
-        const image = this.matter.add.image(x, y, dropKey);
-        image.setBody({
-            type: 'rectangle',
-            width: image.width / 2,
-            height: image.height / 2
-        }, { isStatic: true });
-        image.setOrigin(0.5, 0.6)
-        image.depth = y;
-
-        const metaConfig: MetaConfig = {
-            key: dropKey,
-            type: 'item_drop',
-            parent: this,
-            mineable: false,
-            hitable: false
-        };
-        image.setData('meta', metaConfig);
-
-        // OutlinePipelinePlugin
-        const postFxPlugin = this.plugins.get('rexOutlinePipeline') as OutlinePipelinePlugin;
-        postFxPlugin.add(image, {
-            thickness: 3,
-            outlineColor: 0xcfc6b8
-        });
-
-        const follower = { t: 0, vec: new Phaser.Math.Vector2() };
-
-        const negOrPos = Math.ceil((Math.random() - 0.5) * 2) < 1 ? -1 : 1;
-        const xValue = this.getRandomInt(20) * negOrPos;
-        
-        const startPoint = new Phaser.Math.Vector2(x, y);
-        const controlPoint1 = new Phaser.Math.Vector2(x, y - 30);
-        const controlPoint2 = new Phaser.Math.Vector2(x + xValue, y - 30);
-        const endPoint = new Phaser.Math.Vector2(x + xValue, y + this.getRandomInt(15));
-
-        const curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
-
-        this.tweens.add({
-            targets: follower,
-            t: 1,
-            duration: 400,
-            yoyo: false,
-            repeat: 0,
-            onUpdate: () => {
-                curve.getPoint(follower.t, follower.vec);
-                image.setPosition(follower.vec.x, follower.vec.y);
-                image.depth = 1000;
-            },
-            onComplete: () => {
-                image.depth = image.y;
-            }
-
-        });
-    }
-
-    private getRandomInt(max: number): number {
-        return Math.floor(Math.random() * max);
     }
 }

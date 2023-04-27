@@ -4,7 +4,7 @@ import { BootScene } from './scenes/boot-scene';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import { OverworldScene } from './scenes/overworld-scene';
 import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin.js';
-import { ItemDropPool } from './item-drop-pool';
+import { ItemDropPool } from './pools/item-drop-pool';
 
 Phaser.GameObjects.GameObjectFactory.register('itemDropPool', function () {
 	// @ts-ignore

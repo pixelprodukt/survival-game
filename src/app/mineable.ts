@@ -3,7 +3,7 @@ import { CollisionCategories } from './configuration/collision-categories';
 import { Hitable } from './hitable';
 import { MineableConfig } from './mineable-config';
 import { MetaConfig } from './meta-config';
-import { ItemDropPool } from './item-drop-pool';
+import { ItemDropPool } from './pools/item-drop-pool';
 
 export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 

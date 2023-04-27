@@ -1,5 +1,6 @@
-import { ProjectileConfig } from './firearm-config';
-import { Projectile } from './projectile'
+import { ProjectileConfig } from '../firearm-config';
+import { Projectile } from '../projectile';
+
 
 export class ProjectilePool extends Phaser.GameObjects.Group {
 
