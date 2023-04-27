@@ -91,7 +91,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         });
     }
 
-    unset(): void {
+    reset(): void {
         this.x = 0;
         this.y = 0;
         this.activeForCollecting = false;

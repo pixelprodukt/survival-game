@@ -8,7 +8,6 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
 			classType: ItemDrop,
 			maxSize: -1
 		}
-
 		super(scene, Object.assign(defaults, config));
 	}
 
@@ -28,7 +27,7 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
 	}
 
 	despawn(drop: ItemDrop): void {
-        drop.unset();
+        drop.reset();
 		drop.setActive(false);
 		drop.setVisible(false);
 	}

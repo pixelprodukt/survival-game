@@ -64,7 +64,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
         });
     }
 
-    unset(): void {    
+    reset(): void {    
         // this.speed = 2;
         // this.timeToLive = 0;
         this._markForDestroy = false;
