@@ -41,6 +41,10 @@ export const AssetConfiguration: Assets = {
         {
             key: 'stone_drop',
             path: 'assets/spritesheets/drops/stone_drop.png'
+        },
+        {
+            key: 'toolbar_icon',
+            path: 'assets/ui/toolbar_icon.png'
         }
     ],
     spritesheets: [

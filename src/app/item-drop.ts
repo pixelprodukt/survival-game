@@ -1,5 +1,6 @@
 import { CollisionCategories } from './configuration/collision-categories';
 import { MetaConfig } from './meta-config';
+import {getRandomInt} from "./configuration/constants";
 
 export class ItemDrop extends Phaser.Physics.Matter.Image {
 
@@ -42,12 +43,12 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         const follower = { t: 0, vec: new Phaser.Math.Vector2() };
 
         const negOrPos = Math.ceil((Math.random() - 0.5) * 2) < 1 ? -1 : 1;
-        const xValue = this.getRandomInt(20) * negOrPos;
+        const xValue = getRandomInt(20) * negOrPos;
         
         const startPoint = new Phaser.Math.Vector2(this.x, this.y);
         const controlPoint1 = new Phaser.Math.Vector2(this.x, this.y - 30);
         const controlPoint2 = new Phaser.Math.Vector2(this.x + xValue, this.y - 30);
-        const endPoint = new Phaser.Math.Vector2(this.x + xValue, this.y + this.getRandomInt(15));
+        const endPoint = new Phaser.Math.Vector2(this.x + xValue, this.y + getRandomInt(15));
 
         const curve = new Phaser.Curves.CubicBezier(startPoint, controlPoint1, controlPoint2, endPoint);
 
@@ -100,7 +101,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         this.hoverTween.remove();
     }
 
-    private getRandomInt(max: number): number {
+    /*private getRandomInt(max: number): number {
         return Math.floor(Math.random() * max);
-    }
+    }*/
 }

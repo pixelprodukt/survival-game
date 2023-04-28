@@ -12,18 +12,16 @@ export class MineablePool extends Phaser.GameObjects.Group {
         super(scene, Object.assign(defaults, config));
     }
 
-    spawn(x = 0, y = 0, config: MineableConfig, itemDropPool: ItemDropPool): void {
+    spawn(x = 0, y = 0, config: MineableConfig): void {
         const spawnExisting = this.countActive(false) > 0;
-        const mineable = super.get(x, y, config.imageKey); 
+        const mineable: Mineable = super.get(x, y, config.imageKey);
 
-        mineable.init(x, y, config, itemDropPool, this.despawn);
+        mineable.init(x, y, config, this.despawn);
 
         if (spawnExisting) {
             mineable.setActive(true);
             mineable.setVisible(true);
         }
-        
-        return mineable;
     }
 
     despawn(mineable: Mineable): void {

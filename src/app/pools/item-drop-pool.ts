@@ -22,8 +22,6 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
 			drop.setActive(true);
 			drop.setVisible(true);
 		}
-
-		return drop;
 	}
 
 	despawn(drop: ItemDrop): void {

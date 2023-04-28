@@ -9,6 +9,8 @@ import { ItemDropPool } from '../pools/item-drop-pool';
 import { MineablePool } from '../pools/mineable-pool';
 import { ProjectilePool } from '../pools/projectile-pool';
 
+const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
+
 export class OverworldScene extends Phaser.Scene {
 
     private keyW!: Phaser.Input.Keyboard.Key;
@@ -20,13 +22,13 @@ export class OverworldScene extends Phaser.Scene {
     private keyOne!: Phaser.Input.Keyboard.Key;
     private keyTwo!: Phaser.Input.Keyboard.Key;
 
+    private placementMode = false;
+
     private player!: Player;
-    private itemDropPool!: ItemDropPool;
     private mineablePool!: MineablePool;
 
     public projectilePool!: ProjectilePool;
-
-    private placementMode = false;
+    public itemDropPool!: ItemDropPool;
 
     constructor() {
         super(SceneKeys.TEST);
@@ -61,21 +63,21 @@ export class OverworldScene extends Phaser.Scene {
         
 
         // Test Minables
-        this.mineablePool.spawn(120, 40, TREE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(20, 60, TREE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(60, 30, TREE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(80, 20, TREE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(10, 50, TREE_CONFIG, this.itemDropPool);
+        this.mineablePool.spawn(120, 40, TREE_CONFIG);
+        this.mineablePool.spawn(20, 60, TREE_CONFIG);
+        this.mineablePool.spawn(60, 30, TREE_CONFIG);
+        this.mineablePool.spawn(80, 20, TREE_CONFIG);
+        this.mineablePool.spawn(10, 50, TREE_CONFIG);
 
-        this.mineablePool.spawn(-30, -30, STONE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(20, -40, STONE_CONFIG, this.itemDropPool);
-        this.mineablePool.spawn(-48, -20, STONE_CONFIG, this.itemDropPool);
+        this.mineablePool.spawn(-30, -30, STONE_CONFIG);
+        this.mineablePool.spawn(20, -40, STONE_CONFIG);
+        this.mineablePool.spawn(-48, -20, STONE_CONFIG);
 
 
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
             if (this.placementMode) {
-                this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG, this.itemDropPool);
+                this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
             }
             /* this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
             this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
@@ -92,6 +94,9 @@ export class OverworldScene extends Phaser.Scene {
                 // console.log(bodies);
             }
         });
+
+        // UI
+        // const toolbar = [this.add.image(0, 0, 'toolbar_icon')];
     }
 
     update(_time: number, delta: number): void {
@@ -114,14 +119,18 @@ export class OverworldScene extends Phaser.Scene {
     }
 
     private initKeys(): void {
-        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
-        this.keyOne = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
-        this.keyTwo = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        this.keyW = this.addKey(KeyCode.W);
+        this.keyA = this.addKey(KeyCode.A);
+        this.keyS = this.addKey(KeyCode.S);
+        this.keyD = this.addKey(KeyCode.D);
+        this.keySpace = this.addKey(KeyCode.SPACE);
+        this.keyP = this.addKey(KeyCode.P);
+        this.keyOne = this.addKey(KeyCode.ONE);
+        this.keyTwo = this.addKey(KeyCode.TWO);
+    }
+
+    private addKey(keyCode: number): Phaser.Input.Keyboard.Key {
+        return this.input.keyboard.addKey(keyCode);
     }
 
     private handlePlayerControls(): void {

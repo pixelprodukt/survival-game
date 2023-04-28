@@ -4,6 +4,7 @@ import { Hitable } from './hitable';
 import { MineableConfig } from './mineable-config';
 import { MetaConfig } from './meta-config';
 import { ItemDropPool } from './pools/item-drop-pool';
+import {getOverworldScene, getRandomInt} from "./configuration/constants";
 
 export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 
@@ -13,7 +14,6 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
     private particleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
     private lootDropKeys!: string[];
     private config!: MineableConfig;
-    private itemDropPool!: ItemDropPool;
     private despawnCallback!: Function;
 
     public isActiveForPointer = false;
@@ -28,9 +28,8 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
         super(scene.matter.world, x, y, imageKey);
     }
 
-    init(x: number, y: number, config: MineableConfig, itemDropPool: ItemDropPool, despawnCallback: Function): void {
+    init(x: number, y: number, config: MineableConfig, despawnCallback: Function): void {
         this.config = config;
-        this.itemDropPool = itemDropPool;
         this.hitpoints = config.hitpoints;
         this.despawnCallback = despawnCallback;
 
@@ -154,18 +153,17 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 
     private dropLoot(): void {
         this.lootDropKeys.forEach((key: string) => {
-            this.itemDropPool.spawn(this.x, this.y, key);
-            this.itemDropPool.spawn(this.x, this.y, key);
-            this.itemDropPool.spawn(this.x, this.y, key);
-            this.itemDropPool.spawn(this.x, this.y, key);
+            this.spawnDrop(this.x, this.y, key);
+            this.spawnDrop(this.x, this.y, key);
+            this.spawnDrop(this.x, this.y, key);
+            this.spawnDrop(this.x, this.y, key);
         });
     }
 
-    private playRandomHitSound(): void {
-        this.hitSounds[this.getRandomInt(this.hitSounds.length)].play({ volume: 0.5 });
+    private spawnDrop(x: number, y: number, key: string): void {
+        getOverworldScene(this.scene).itemDropPool.spawn(this.x, this.y, key);
     }
-
-    private getRandomInt(max: number): number {
-        return Math.floor(Math.random() * max);
+    private playRandomHitSound(): void {
+        this.hitSounds[getRandomInt(this.hitSounds.length)].play({ volume: 0.5 });
     }
 }

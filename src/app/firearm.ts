@@ -4,21 +4,22 @@ import { FirearmConfig } from './firearm-config';
 import { Player } from './player';
 import { OverworldScene } from './scenes/overworld-scene';
 import { ProjectilePool } from './pools/projectile-pool';
+import {getOverworldScene} from "./configuration/constants";
 
 export class Firearm extends EquippableItem {
 
     private mouseTarget: number = 180;
     private muzzleSprite!: Phaser.GameObjects.Sprite;
     private activeBullets: Projectile[] = [];
-    private spriteKey: string;
-    private fireRate: number;
+    private readonly spriteKey: string;
+    private readonly fireRate: number;
 
     private projectilePool!: ProjectilePool;
 
     constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfig) {
         super(scene, parent, config);
 
-        this.projectilePool = (scene as OverworldScene).projectilePool;
+        this.projectilePool = getOverworldScene(scene).projectilePool;
 
         this.fireRate = config.fireRate || 300; // default
         this.spriteKey = config.spriteKey;

@@ -1,5 +1,6 @@
 import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin';
 import { CollisionCategories } from './configuration/collision-categories';
+import {getRandomInt} from "./configuration/constants";
 
 export class Tree {
 
@@ -132,10 +133,6 @@ export class Tree {
     }
 
     private playRandomHitSound(): void {
-        this.hitSounds[this.getRandomInt(this.hitSounds.length)].play();
-    }
-
-    private getRandomInt(max: number): number {
-        return Math.floor(Math.random() * max);
+        this.hitSounds[getRandomInt(this.hitSounds.length)].play();
     }
 }

@@ -1,4 +1,4 @@
-import { PLAYER_FRAMERATE } from './configuration/constants';
+import {getRandomInt, PLAYER_FRAMERATE} from './configuration/constants';
 import { Direction } from './direction';
 import { EquippableItem } from './equippable-item';
 import { Pickaxe } from './pickaxe';
@@ -235,7 +235,7 @@ export class Player {
 
     private playRandomWalkSound(delta: number): void {
         if (this.stepSoundInterval == 0) {
-            this.walkSounds[this.getRandomInt(this.walkSounds.length)].play();
+            this.walkSounds[getRandomInt(this.walkSounds.length)].play();
         }
         if (this.stepSoundInterval < 350) {
             this.stepSoundInterval += delta
@@ -243,11 +243,6 @@ export class Player {
             this.stepSoundInterval = 0;
         }
     }
-
-    private getRandomInt(max: number): number {
-        return Math.floor(Math.random() * max);
-    }
-
     get sprite(): Phaser.Physics.Matter.Sprite {
         return this.playerSprite;
     }
