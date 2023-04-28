@@ -12,7 +12,7 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
         super(scene, Object.assign(defaults, config));
     }
 
-    spawn(x = 0, y = 0, key: string = 'rifle', angle: number, config: ProjectileConfig): void {
+    spawn(x = 0, y = 0, key: string = 'rifle', angle: number, config: ProjectileConfig): Projectile {
 
         const spawnExisting = this.countActive(false) > 0;
         const projectile = super.get(x, y, key); 
@@ -23,6 +23,8 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
             projectile.setActive(true);
             projectile.setVisible(true);
         }
+
+        return projectile;
     }
 
     despawn(projectile: Projectile): void {
