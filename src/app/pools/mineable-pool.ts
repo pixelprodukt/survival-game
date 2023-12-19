@@ -1,6 +1,5 @@
 import { Mineable } from '../mineable';
 import { MineableConfig } from '../mineable-config';
-import { ItemDropPool } from './item-drop-pool';
 
 export class MineablePool extends Phaser.GameObjects.Group {
 

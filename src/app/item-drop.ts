@@ -1,6 +1,6 @@
 import { CollisionCategories } from './configuration/collision-categories';
 import { MetaConfig } from './meta-config';
-import {getRandomInt} from "./configuration/constants";
+import { getRandomInt } from "./configuration/constants";
 
 export class ItemDrop extends Phaser.Physics.Matter.Image {
 
@@ -19,7 +19,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         super(scene.matter.world, x, y, dropKey);
     }
 
-    init(key: string, despawnCallback: Function): void {        
+    init(key: string, despawnCallback: Function): void {
         this.setTexture(key);
         this.plopSound = this.scene.sound.add('plop01');
 
@@ -44,7 +44,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
 
         const negOrPos = Math.ceil((Math.random() - 0.5) * 2) < 1 ? -1 : 1;
         const xValue = getRandomInt(20) * negOrPos;
-        
+
         const startPoint = new Phaser.Math.Vector2(this.x, this.y);
         const controlPoint1 = new Phaser.Math.Vector2(this.x, this.y - 30);
         const controlPoint2 = new Phaser.Math.Vector2(this.x + xValue, this.y - 30);
@@ -67,7 +67,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
                 this.depth = this.y;
                 this.hoverTween = this.scene.tweens.add({
                     targets: this,
-                    props: { y: '-= 4'},
+                    props: { y: '-= 4' },
                     duration: 1000,
                     ease: 'Quad.easeInOut',
                     yoyo: true,

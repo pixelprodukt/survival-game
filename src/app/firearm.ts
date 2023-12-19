@@ -1,10 +1,9 @@
-import { Projectile } from './projectile';
+import { getOverworldScene } from "./configuration/constants";
 import { EquippableItem } from './equippable-item';
 import { FirearmConfig } from './firearm-config';
 import { Player } from './player';
-import { OverworldScene } from './scenes/overworld-scene';
 import { ProjectilePool } from './pools/projectile-pool';
-import {getOverworldScene} from "./configuration/constants";
+import { Projectile } from './projectile';
 
 export class Firearm extends EquippableItem {
 

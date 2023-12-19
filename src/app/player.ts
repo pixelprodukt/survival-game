@@ -1,10 +1,10 @@
-import {getRandomInt, PLAYER_FRAMERATE} from './configuration/constants';
+import { CollisionCategories } from './configuration/collision-categories';
+import { getRandomInt, PLAYER_FRAMERATE } from './configuration/constants';
+import { RIFLE_CONFIG } from './configuration/firearm-configurations';
 import { Direction } from './direction';
 import { EquippableItem } from './equippable-item';
-import { Pickaxe } from './pickaxe';
 import { Firearm } from './firearm';
-import { RIFLE_CONFIG, ROCKETLAUNCHER_CONFIG } from './configuration/firearm-configurations';
-import { CollisionCategories } from './configuration/collision-categories';
+import { Pickaxe } from './pickaxe';
 
 enum PlayerAnimationKeys {
     WALK_DOWN_LEFT = 'playerWalkDownLeft',

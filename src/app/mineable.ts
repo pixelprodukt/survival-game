@@ -3,9 +3,7 @@ import { CollisionCategories } from './configuration/collision-categories';
 import { Hitable } from './hitable';
 import { MineableConfig } from './mineable-config';
 import { MetaConfig } from './meta-config';
-import { ItemDropPool } from './pools/item-drop-pool';
 import {getOverworldScene, getRandomInt} from "./configuration/constants";
-import {OutlinePipeline} from "./custom-pipeline/outline-pipeline";
 
 export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 
