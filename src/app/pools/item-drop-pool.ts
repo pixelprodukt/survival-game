@@ -2,8 +2,7 @@ import { ItemDrop } from '../item-drop'
 
 export class ItemDropPool extends Phaser.GameObjects.Group {
 
-    constructor(scene: Phaser.Scene, config: Phaser.Types.GameObjects.Group.GroupConfig = {})
-	{
+    constructor(scene: Phaser.Scene, config: Phaser.Types.GameObjects.Group.GroupConfig = {}) {
 		const defaults: Phaser.Types.GameObjects.Group.GroupConfig = {
 			classType: ItemDrop,
 			maxSize: -1

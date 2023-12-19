@@ -14,7 +14,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         public scene: Phaser.Scene,
         public x: number,
         public y: number,
-        private dropKey: string,
+        private dropKey: string
     ) {
         super(scene.matter.world, x, y, dropKey);
     }
@@ -100,8 +100,4 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         this.popOutTween.remove();
         this.hoverTween.remove();
     }
-
-    /*private getRandomInt(max: number): number {
-        return Math.floor(Math.random() * max);
-    }*/
 }

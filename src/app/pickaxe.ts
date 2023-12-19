@@ -2,11 +2,11 @@ import { EquippableItem } from './equippable-item';
 import { MetaConfig } from './meta-config';
 import { Mineable } from './mineable';
 import { Player } from './player';
-import { Tree } from './tree';
 
 export class Pickaxe extends EquippableItem {
 
     private collisionBody: MatterJS.BodyType | null = null;
+    private currentTimeline: Phaser.Tweens.Timeline | null = null;
 
     constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player) {
         super(scene, parent, {
@@ -35,16 +35,6 @@ export class Pickaxe extends EquippableItem {
             });
 
             if (this.parent.isFacingLeft) {
-                /* timeline.add({
-                    targets: this.sprite,
-                    x: '+=4',
-                    y: '-=2',
-                    angle: 25,
-                    ease: 'Power1',
-                    duration: 100,
-                    yoyo: true,
-                    onComplete: () => { this.useSound.play(); }
-                }); */
                 timeline.add({
                     targets: this.sprite,
                     x: '-=4',
@@ -71,24 +61,19 @@ export class Pickaxe extends EquippableItem {
                             };
                         }
                     },
-                    onUpdate: (tween: any) => {
-                        // console.log('on update', tween);
-
+                    onUpdate: (tween: Phaser.Tweens.Tween) => {
+                        if (!this.parent.isFacingLeft) {
+                            this.sprite.x = tween.data[0].start!;
+                            this.sprite.y = tween.data[1].start!;
+                            this.sprite.angle = tween.data[2].start!;
+                            this.useSound.stop();
+                            // timeline.destroy();
+                        }
                     }
                 });
             }
 
             if (this.parent.isFacingRight) {
-                /* timeline.add({
-                    targets: this.sprite,
-                    x: '-=4',
-                    y: '-=2',
-                    angle: -25,
-                    ease: 'Power1',
-                    duration: 100,
-                    yoyo: true,
-                    onComplete: () => { this.useSound.play(); }
-                }); */
                 timeline.add({
                     targets: this.sprite,
                     x: '+=4',
@@ -114,11 +99,23 @@ export class Pickaxe extends EquippableItem {
                                 }
                             };
                         }
+                    },
+                    onUpdate: (tween: Phaser.Tweens.Tween) => {
+                        if (!this.parent.isFacingRight) {
+                            this.sprite.x = tween.data[0].start!;
+                            this.sprite.y = tween.data[1].start!;
+                            this.sprite.angle = tween.data[2].start!;
+                            this.useSound.stop();
+                            // timeline.destroy();
+                        }
                     }
                 });
             }
 
-            timeline.play();
+            if (timeline) {
+                timeline.play();
+            }
+
         }
     }
 }

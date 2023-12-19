@@ -4,12 +4,7 @@ import { BootScene } from './scenes/boot-scene';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import { OverworldScene } from './scenes/overworld-scene';
 import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin.js';
-import { ItemDropPool } from './pools/item-drop-pool';
-
-Phaser.GameObjects.GameObjectFactory.register('itemDropPool', function () {
-	// @ts-ignore
-	return this.updateList.add(new ItemDropPool(this.scene));
-});
+import {UiOverlayScene} from "./scenes/ui-overlay-scene";
 
 let debug: Phaser.Types.Physics.Matter.MatterDebugConfig;
 
@@ -104,7 +99,7 @@ const configObject: Types.Core.GameConfig = {
     },
     render: {
         antialiasGL: false,
-        pixelArt: true,
+        pixelArt: true
     },
     plugins: {
         global: [
@@ -116,7 +111,7 @@ const configObject: Types.Core.GameConfig = {
             }
         ],
     },
-    scene: [BootScene, OverworldScene]
+    scene: [BootScene, OverworldScene, UiOverlayScene]
 };
 
 const game = new Game(configObject);

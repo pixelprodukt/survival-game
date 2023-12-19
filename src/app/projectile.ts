@@ -57,7 +57,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
             const gameObject = data.bodyA.gameObject as Phaser.GameObjects.GameObject;
             const meta: MetaConfig = gameObject.getData('meta');
 
-            if (meta.hitable) {
+            if (meta?.hitable) {
                 this.spawnExplosion(data.bodyB.position.x, data.bodyB.position.y);
                 this._markForDestroy = true;
             }

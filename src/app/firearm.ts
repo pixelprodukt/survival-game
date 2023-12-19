@@ -97,7 +97,7 @@ export class Firearm extends EquippableItem {
     }
 
     private degreesToRadians(degrees: number): number {
-        var pi = Math.PI;
+        const pi = Math.PI;
         return degrees * (pi / 180);
     }
 

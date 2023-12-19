@@ -78,6 +78,7 @@ export class BootScene extends Phaser.Scene {
             assetText.destroy();
 
             this.scene.run(SceneKeys.TEST);
+            this.scene.run(SceneKeys.UI_OVERLAY);
         });
 
         AssetConfiguration.images.forEach((resource: AssetResource) => {

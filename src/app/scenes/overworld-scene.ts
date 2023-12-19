@@ -1,13 +1,11 @@
-import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin';
-import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
-import { STONE_CONFIG, TREE_CONFIG } from '../configuration/mineable-configurations';
-import { SceneKeys } from '../configuration/scene-keys';
-import { MetaConfig } from '../meta-config';
-import { Mineable } from '../mineable';
-import { Player } from '../player';
-import { ItemDropPool } from '../pools/item-drop-pool';
-import { MineablePool } from '../pools/mineable-pool';
-import { ProjectilePool } from '../pools/projectile-pool';
+import {CANVAS_HEIGHT, CANVAS_WIDTH, SCALE} from '../configuration/constants';
+import {STONE_CONFIG, TREE_CONFIG} from '../configuration/mineable-configurations';
+import {SceneKeys} from '../configuration/scene-keys';
+import {Player} from '../player';
+import {ItemDropPool} from '../pools/item-drop-pool';
+import {MineablePool} from '../pools/mineable-pool';
+import {ProjectilePool} from '../pools/projectile-pool';
+import {FleshblobPool} from "../pools/fleshblob-pool";
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -29,12 +27,15 @@ export class OverworldScene extends Phaser.Scene {
 
     public projectilePool!: ProjectilePool;
     public itemDropPool!: ItemDropPool;
+    public fleshblobPool!: FleshblobPool;
 
     constructor() {
         super(SceneKeys.TEST);
     }
 
-    preload(): void { }
+    init(): void {}
+
+    preload(): void {}
 
     create(): void {
         // Pools
@@ -46,6 +47,9 @@ export class OverworldScene extends Phaser.Scene {
 
         const mineablePoolInstance = new MineablePool(this);
         this.mineablePool = this.add.existing(mineablePoolInstance);
+
+        const fleshblobPoolInstance = new FleshblobPool(this);
+        this.fleshblobPool = this.add.existing(fleshblobPoolInstance);
 
         // init
         this.initKeys();
@@ -73,11 +77,15 @@ export class OverworldScene extends Phaser.Scene {
         this.mineablePool.spawn(20, -40, STONE_CONFIG);
         this.mineablePool.spawn(-48, -20, STONE_CONFIG);
 
+        // Test Fleshblobs
+        this.fleshblobPool.spawn(50, -20);
+
 
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
             if (this.placementMode) {
-                this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
+                // this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
+                this.fleshblobPool.spawn(pointer.worldX, pointer.worldY);
             }
             /* this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
             this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');

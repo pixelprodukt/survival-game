@@ -3,7 +3,6 @@ import { Direction } from './direction';
 import { EquippableItem } from './equippable-item';
 import { Pickaxe } from './pickaxe';
 import { Firearm } from './firearm';
-import { Tree } from './tree';
 import { RIFLE_CONFIG, ROCKETLAUNCHER_CONFIG } from './configuration/firearm-configurations';
 import { CollisionCategories } from './configuration/collision-categories';
 
@@ -16,7 +15,7 @@ enum PlayerAnimationKeys {
     IDLE_DOWN_RIGHT = 'playerIdleDownRight',
     IDLE_UP_LEFT = 'playerIdleUpLeft',
     IDLE_UP_RIGHT = 'playerIdleUpRight'
-};
+}
 
 interface Animations {
     idleDownRight: Phaser.Animations.Animation;
@@ -31,16 +30,16 @@ interface Animations {
 
 export class Player {
 
-    public static readonly SPEED = 0.5;
+    public static readonly SPEED = 1.0;
 
-    private playerSprite!: Phaser.Physics.Matter.Sprite;
+    private readonly playerSprite!: Phaser.Physics.Matter.Sprite;
     private _direction = Direction.DOWN_RIGHT;
     private animations!: Animations;
     private stepSoundInterval: number = 0;
     private walkSounds!: Phaser.Sound.BaseSound[];
 
-    private pickaxe!: Pickaxe;
-    private rifle!: Firearm;
+    private readonly pickaxe!: Pickaxe;
+    private readonly rifle!: Firearm;
 
     public equippedItem!: EquippableItem;
 
@@ -51,7 +50,14 @@ export class Player {
         const compoundBody = this.scene.matter.body.create({ parts: [rect, circle], inertia: Infinity, frictionAir: 0.2, mass: 10 });
 
         this.playerSprite = this.scene.matter.add.sprite(0, 0, 'nadia', 3);
-        
+
+        /*this.playerSprite.setPipeline(OutlinePipeline.KEY);
+        this.playerSprite.pipeline.set2f(
+            "uTextureSize",
+            this.playerSprite.texture.getSourceImage().width,
+            this.playerSprite.texture.getSourceImage().height
+        );*/
+
         this.playerSprite.setExistingBody(compoundBody);
         this.playerSprite.setName('player');
         this.playerSprite.setOrigin(0.5, 0.9);

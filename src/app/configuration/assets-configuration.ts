@@ -82,6 +82,11 @@ export const AssetConfiguration: Assets = {
             key: 'explosion',
             path: 'assets/spritesheets/explosion01.png',
             config: { frameWidth: 64, frameHeight: 64 }
+        },
+        {
+            key: 'fleshblob',
+            path: 'assets/spritesheets/fleshblob_enemy.png',
+            config: { frameWidth: 16, frameHeight: 16 }
         }
     ],
     sounds: [
