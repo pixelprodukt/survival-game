@@ -4,7 +4,7 @@ import { BootScene } from './scenes/boot-scene';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice';
 import { OverworldScene } from './scenes/overworld-scene';
 import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin.js';
-import {UiOverlayScene} from "./scenes/ui-overlay-scene";
+import { UiOverlayScene } from "./scenes/ui-overlay-scene";
 
 let debug: Phaser.Types.Physics.Matter.MatterDebugConfig;
 
