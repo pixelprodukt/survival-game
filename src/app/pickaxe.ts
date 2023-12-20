@@ -6,7 +6,6 @@ import { Player } from './player';
 export class Pickaxe extends EquippableItem {
 
     private collisionBody: MatterJS.BodyType | null = null;
-    private currentTimeline: Phaser.Tweens.Timeline | null = null;
 
     constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player) {
         super(scene, parent, {

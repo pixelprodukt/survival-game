@@ -11,7 +11,7 @@ export class FleshblobPool extends Phaser.GameObjects.Group {
         this.initAnimations();
     }
 
-    spawn(x = 0, y = 0): void {
+    spawn(x = 0, y = 0): Fleshblob {
         const spawnExisting = this.countActive(false) > 0;
         const fleshblob = super.get(x, y, 'fleshblob') as Fleshblob;
 
@@ -21,6 +21,7 @@ export class FleshblobPool extends Phaser.GameObjects.Group {
             fleshblob.setActive(true);
             fleshblob.setVisible(true);
         }
+        return fleshblob;
     }
 
     despawn(fleshblob: Fleshblob): void {

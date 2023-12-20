@@ -1,11 +1,12 @@
-import {CANVAS_HEIGHT, CANVAS_WIDTH, SCALE} from '../configuration/constants';
-import {STONE_CONFIG, TREE_CONFIG} from '../configuration/mineable-configurations';
-import {SceneKeys} from '../configuration/scene-keys';
-import {Player} from '../player';
-import {ItemDropPool} from '../pools/item-drop-pool';
-import {MineablePool} from '../pools/mineable-pool';
-import {ProjectilePool} from '../pools/projectile-pool';
-import {FleshblobPool} from "../pools/fleshblob-pool";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
+import { STONE_CONFIG, TREE_CONFIG } from '../configuration/mineable-configurations';
+import { SceneKeys } from '../configuration/scene-keys';
+import { Player } from '../player';
+import { ItemDropPool } from '../pools/item-drop-pool';
+import { MineablePool } from '../pools/mineable-pool';
+import { ProjectilePool } from '../pools/projectile-pool';
+import { FleshblobPool } from '../pools/fleshblob-pool';
+import { Fleshblob } from '../fleshblob';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -29,13 +30,17 @@ export class OverworldScene extends Phaser.Scene {
     public itemDropPool!: ItemDropPool;
     public fleshblobPool!: FleshblobPool;
 
+    public blob!: Fleshblob;
+
     constructor() {
         super(SceneKeys.TEST);
     }
 
-    init(): void {}
+    init(): void {
+    }
 
-    preload(): void {}
+    preload(): void {
+    }
 
     create(): void {
         // Pools
@@ -64,7 +69,6 @@ export class OverworldScene extends Phaser.Scene {
         this.cameras.main.setLerp(0.05, 0.05);
         this.cameras.main.setZoom(SCALE);
 
-        
 
         // Test Minables
         this.mineablePool.spawn(120, 40, TREE_CONFIG);
@@ -78,11 +82,11 @@ export class OverworldScene extends Phaser.Scene {
         this.mineablePool.spawn(-48, -20, STONE_CONFIG);
 
         // Test Fleshblobs
-        this.fleshblobPool.spawn(50, -20);
-
+        this.blob = this.fleshblobPool.spawn(50, -20);
 
 
         this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
+            console.log('distance', Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y));
             if (this.placementMode) {
                 // this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
                 this.fleshblobPool.spawn(pointer.worldX, pointer.worldY);
@@ -109,6 +113,10 @@ export class OverworldScene extends Phaser.Scene {
 
     update(_time: number, delta: number): void {
 
+        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y) < 100) {
+            console.log('blob ai triggered');
+        }
+
         this.handlePlayerControls();
 
         this.player.update(_time, delta);
@@ -118,8 +126,7 @@ export class OverworldScene extends Phaser.Scene {
                 this.matter.world.drawDebug = false;
                 this.placementMode = false;
                 this.matter.world.debugGraphic.clear();
-            }
-            else {
+            } else {
                 this.matter.world.drawDebug = true;
                 this.placementMode = true;
             }

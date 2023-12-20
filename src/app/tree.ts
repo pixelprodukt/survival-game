@@ -2,6 +2,11 @@ import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-p
 import { CollisionCategories } from './configuration/collision-categories';
 import {getRandomInt} from "./configuration/constants";
 
+/**
+ * TODO: DELETE
+ * Marked for removal.
+ * This class isn't used anymore.
+ */
 export class Tree {
 
     private hitpoints = 30;
@@ -80,7 +85,7 @@ export class Tree {
             y: 300,
             speed: 50,
             scale: { start: 1, end: 0.5 },
-            alpha: {start: 1, end: 0 },
+            alpha: {start: 1, end: 1 },
             blendMode: 'NORMAL',
             lifespan: 200,
             gravityY: 0,
@@ -122,7 +127,7 @@ export class Tree {
             repeat: 0,
             onComplete: () => {
                 if (this.hitpoints <= 0) {
-                    this.particleEmitter.explode(50, this.image.x, this.image.y);
+                    this.particleEmitter.explode(350, this.image.x, this.image.y);
                     this.plopSound.play({ volume: 0.5 });
                     this.image.destroy();
                 }

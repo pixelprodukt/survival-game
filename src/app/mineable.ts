@@ -3,7 +3,7 @@ import { CollisionCategories } from './configuration/collision-categories';
 import { Hitable } from './hitable';
 import { MineableConfig } from './mineable-config';
 import { MetaConfig } from './meta-config';
-import {getOverworldScene, getRandomInt} from "./configuration/constants";
+import { getOverworldScene, getRandomInt } from "./configuration/constants";
 
 export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 
@@ -112,11 +112,13 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
             lifespan: 200,
             gravityY: 0,
         }).stop();
+
+        //this.particleEmitter.deathCallback = this.particleEmitter.remove;
     }
-    
+
     reset(): void {
         this.hitpoints = 1;
-        this.particleEmitter.remove();
+        // this.particleEmitter.remove();
         this.removeAllListeners();
         this.removeInteractive();
         this.world.remove(this.body);
@@ -136,7 +138,7 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
             setTimeout(() => {
                 this.clearTint();
             }, 30);
-    
+
             this.scene.add.tween({
                 targets: this,
                 props: {

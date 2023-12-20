@@ -1,3 +1,8 @@
+/**
+ * TODO: DELETE
+ * Marked for removal.
+ * This class isn't used anymore.
+ */
 export class OutlinePipeline extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
 
     // the unique id of this pipeline

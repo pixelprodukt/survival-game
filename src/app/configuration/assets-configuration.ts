@@ -45,6 +45,10 @@ export const AssetConfiguration: Assets = {
         {
             key: 'toolbar_icon',
             path: 'assets/ui/toolbar_icon.png'
+        },
+        {
+            key: 'toolbar_icon_selected',
+            path: 'assets/ui/toolbar_icon_selected.png'
         }
     ],
     spritesheets: [
