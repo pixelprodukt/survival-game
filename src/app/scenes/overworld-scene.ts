@@ -69,7 +69,6 @@ export class OverworldScene extends Phaser.Scene {
         this.cameras.main.setLerp(0.05, 0.05);
         this.cameras.main.setZoom(SCALE);
 
-
         // Test Minables
         this.mineablePool.spawn(120, 40, TREE_CONFIG);
         this.mineablePool.spawn(20, 60, TREE_CONFIG);
@@ -84,38 +83,31 @@ export class OverworldScene extends Phaser.Scene {
         // Test Fleshblobs
         this.blob = this.fleshblobPool.spawn(50, -20);
 
-
-        this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
+        /*this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
             console.log('distance', Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y));
             if (this.placementMode) {
                 // this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
                 this.fleshblobPool.spawn(pointer.worldX, pointer.worldY);
             }
-            /* this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop'); */
-        });
+        });*/
 
-        // this.matter.add.mouseSpring();
-
-        this.input.on('pointermove', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        /*this.input.on('pointermove', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
             const bodies = this.matter.intersectPoint(pointer.worldX, pointer.worldY);
             if (bodies.length) {
                 // console.log(bodies);
             }
-        });
+        });*/
 
-        // UI
-        // const toolbar = [this.add.image(0, 0, 'toolbar_icon')];
+        this.scene.get(SceneKeys.UI_OVERLAY).events.on('toolbarChanged', (data: any) => {
+            console.log('data', data);
+        });
     }
 
     update(_time: number, delta: number): void {
 
-        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y) < 100) {
+        /*if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y) < 100) {
             console.log('blob ai triggered');
-        }
+        }*/
 
         this.handlePlayerControls();
 

@@ -5,6 +5,7 @@ import { Direction } from './direction';
 import { EquippableItem } from './equippable-item';
 import { Firearm } from './firearm';
 import { Pickaxe } from './pickaxe';
+import { EmptyHands } from './empty-hands';
 
 enum PlayerAnimationKeys {
     WALK_DOWN_LEFT = 'playerWalkDownLeft',
@@ -41,7 +42,7 @@ export class Player {
     private readonly pickaxe!: Pickaxe;
     private readonly rifle!: Firearm;
 
-    public equippedItem!: EquippableItem;
+    public equippedItem: EquippableItem | null = null;
 
     constructor(public scene: Phaser.Scene) {
         const bodies = this.scene.matter.bodies;
@@ -74,8 +75,10 @@ export class Player {
         this.rifle = new Firearm(this.scene, this, RIFLE_CONFIG);
         this.rifle.setVisible(false);
 
-        this.equippedItem = this.pickaxe;
-        // this.equippedItem = this.rifle;
+        // this.equippedItem = this.pickaxe;
+        // thisa.equippedItem = this.rifle;
+
+        this.equippedItem = new EmptyHands(this.scene, this);
 
         circle.onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
             const gameObject = data.bodyB.gameObject as Phaser.GameObjects.GameObject;
@@ -97,7 +100,9 @@ export class Player {
     }
 
     useEquippedItem(): void {
-        this.equippedItem.use();
+        if (this.equippedItem) {
+            this.equippedItem.use();
+        }
     }
 
     equipItem(name: string): void {
@@ -166,20 +171,14 @@ export class Player {
             this.playRandomWalkSound(delta);
         }
 
-        this.equippedItem.update(delta);
+        if (this.equippedItem) {
+            this.equippedItem.update(delta);
+        }
         this.sprite.depth = this.sprite.y
     }
 
     setPosition(x: number, y: number): void {
         this.playerSprite.setPosition(x, y);
-    }
-
-    setVelocityX(value: number): void {
-        this.playerSprite.setVelocityX(value);
-    }
-
-    setVelocityY(value: number): void {
-        this.playerSprite.setVelocityY(value);
     }
 
     setVelocity(x: number, y: number): void {

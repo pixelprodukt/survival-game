@@ -91,6 +91,16 @@ export const AssetConfiguration: Assets = {
             key: 'fleshblob',
             path: 'assets/spritesheets/fleshblob_enemy.png',
             config: { frameWidth: 16, frameHeight: 16 }
+        },
+        {
+            key: 'toolbar',
+            path: 'assets/ui/toolbar_spritesheet.png',
+            config: { frameWidth: 16, frameHeight: 16 }
+        },
+        {
+            key: 'unequipped',
+            path: 'assets/spritesheets/unequipped.png',
+            config: { frameWidth: 16, frameHeight: 16 }
         }
     ],
     sounds: [
