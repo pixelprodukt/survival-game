@@ -30,6 +30,14 @@ export const ASSET_CONFIGURATION: AssetConfiguration = {
         {
             key: 'toolbar_icon_selected',
             path: 'assets/ui/toolbar_icon_selected.png'
+        },
+        {
+            key: 'pickaxe_icon',
+            path: 'assets/ui/inventory/pickaxe_icon.png'
+        },
+        {
+            key: 'rifle_icon',
+            path: 'assets/ui/inventory/rifle_icon.png'
         }
     ],
     spritesheets: [

@@ -1,4 +1,4 @@
-import { ASSET_CONFIGURATION } from '../configuration/assets-configuration';
+import { ASSET_CONFIGURATION } from '../configuration/asset-configuration';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, FONT, SCALE } from '../configuration/constants';
 import { Scene } from '../enums/scene';
 import { AssetResource, SpritesheetResource } from '../models/asset-configuration';
