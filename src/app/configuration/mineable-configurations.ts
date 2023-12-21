@@ -1,6 +1,6 @@
-import { MineableConfig } from '../mineable-config';
+import { MineableConfiguration } from '../models/mineable-configuration';
 
-export const TREE_CONFIG: MineableConfig = {
+export const TREE_CONFIG: MineableConfiguration = {
     hitpoints: 30,
     imageKey: 'tree01',
     origin: { x: 0.5, y: 0.85 },
@@ -19,7 +19,7 @@ export const TREE_CONFIG: MineableConfig = {
     lootDropKeys: ['wood_drop']
 };
 
-export const STONE_CONFIG: MineableConfig = {
+export const STONE_CONFIG: MineableConfiguration = {
     hitpoints: 50,
     imageKey: 'stone01',
     origin: { x: 0.5, y: 0.6 },

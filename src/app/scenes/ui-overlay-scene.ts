@@ -1,4 +1,4 @@
-import { SceneKeys } from '../configuration/scene-keys';
+import { Scene } from '../enums/scene';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
 
 export class UiOverlayScene extends Phaser.Scene {
@@ -8,7 +8,7 @@ export class UiOverlayScene extends Phaser.Scene {
     private currentActiveToolbarSpriteCounter: number = 0;
 
     constructor() {
-        super(SceneKeys.UI_OVERLAY);
+        super(Scene.UI_OVERLAY);
     }
 
     preload(): void {

@@ -1,25 +1,6 @@
-export interface Assets {
-    tilemaps: AssetResource[];
-    images: AssetResource[];
-    spritesheets: SpritesheetResource[];
-    sounds: AssetResource[];
-}
+import { AssetConfiguration } from '../models/asset-configuration';
 
-export interface AssetResource {
-    key: string;
-    path: string;
-}
-
-export interface SpritesheetResource extends AssetResource {
-    config: SpritesheetConfig;
-}
-
-export interface SpritesheetConfig {
-    frameWidth: number;
-    frameHeight: number;
-}
-
-export const AssetConfiguration: Assets = {
+export const ASSET_CONFIGURATION: AssetConfiguration = {
     tilemaps: [],
     images: [
         {

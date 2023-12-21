@@ -1,4 +1,4 @@
-import { ItemDrop } from '../item-drop'
+import { ItemDrop } from '../gameObjects/item-drop'
 
 export class ItemDropPool extends Phaser.GameObjects.Group {
 

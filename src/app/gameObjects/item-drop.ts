@@ -1,6 +1,6 @@
-import { CollisionCategories } from './configuration/collision-categories';
-import { MetaConfig } from './meta-config';
-import { getRandomInt } from "./configuration/constants";
+import { CollisionCategory } from '../enums/collision-category';
+import { MetaConfiguration } from '../models/meta-configuration';
+import { getRandomInt } from "../configuration/constants";
 
 export class ItemDrop extends Phaser.Physics.Matter.Image {
 
@@ -31,7 +31,7 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         this.setOrigin(0.5, 0.6)
         this.depth = this.y;
 
-        const metaConfig: MetaConfig = {
+        const metaConfig: MetaConfiguration = {
             key: this.dropKey,
             type: 'item_drop',
             parent: this,
@@ -81,8 +81,8 @@ export class ItemDrop extends Phaser.Physics.Matter.Image {
         }, this.timeUntillActiveAfterSpawn);
 
         // Collision Setup
-        this.setCollisionCategory(CollisionCategories.ITEM_DROP);
-        this.setCollidesWith([CollisionCategories.PLAYER]);
+        this.setCollisionCategory(CollisionCategory.ITEM_DROP);
+        this.setCollidesWith([CollisionCategory.PLAYER]);
 
         this.setOnCollideActive((data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
             if (this.activeForCollecting) {

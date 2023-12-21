@@ -1,4 +1,4 @@
-export interface MetaConfig {
+export interface MetaConfiguration {
     key: string;
     type: string;
     parent: any;

@@ -1,5 +1,5 @@
 import { EquippableItem } from './equippable-item';
-import { MetaConfig } from './meta-config';
+import { MetaConfiguration } from '../models/meta-configuration';
 import { Mineable } from './mineable';
 import { Player } from './player';
 
@@ -50,7 +50,7 @@ export class Pickaxe extends EquippableItem {
                             this.collisionBody = this.scene.matter.add.circle(this.x, this.y + 2, 12, { isSensor: true });
                             this.collisionBody.onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
                                 const gameObject = data.bodyA.gameObject as Phaser.GameObjects.GameObject;
-                                const meta: MetaConfig = gameObject?.getData('meta');
+                                const meta: MetaConfiguration = gameObject?.getData('meta');
                                 if (meta?.mineable) {
                                     const mineable = meta.parent as Mineable;
                                     if (mineable.isSelectedByPointer) {
@@ -89,7 +89,7 @@ export class Pickaxe extends EquippableItem {
                             this.collisionBody = this.scene.matter.add.circle(this.x, this.y + 2, 12, { isSensor: true });
                             this.collisionBody.onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
                                 const gameObject = data.bodyA.gameObject as Phaser.GameObjects.GameObject;
-                                const meta: MetaConfig = gameObject?.getData('meta');
+                                const meta: MetaConfiguration = gameObject?.getData('meta');
                                 if (meta?.mineable) {
                                     const mineable = meta.parent as Mineable;
                                     if (mineable.isSelectedByPointer) {

@@ -1,8 +1,8 @@
-import { getOverworldScene } from "./configuration/constants";
+import { getOverworldScene } from "../configuration/constants";
 import { EquippableItem } from './equippable-item';
-import { FirearmConfig } from './firearm-config';
+import { FirearmConfiguration } from '../models/firearm-configuration';
 import { Player } from './player';
-import { ProjectilePool } from './pools/projectile-pool';
+import { ProjectilePool } from '../pools/projectile-pool';
 import { Projectile } from './projectile';
 
 export class Firearm extends EquippableItem {
@@ -15,7 +15,7 @@ export class Firearm extends EquippableItem {
 
     private projectilePool!: ProjectilePool;
 
-    constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfig) {
+    constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfiguration) {
         super(scene, parent, config);
 
         this.projectilePool = getOverworldScene(scene).projectilePool;

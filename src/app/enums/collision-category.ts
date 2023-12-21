@@ -1,4 +1,4 @@
-export enum CollisionCategories {
+export enum CollisionCategory {
     PLAYER_PROJECTILE = 0b0001,
     HITABLE = 0b0010,
     RESOURCE_OBJECT = 0b0100,

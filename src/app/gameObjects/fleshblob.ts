@@ -1,6 +1,6 @@
-import {CollisionCategories} from "./configuration/collision-categories";
-import {MetaConfig} from "./meta-config";
-import {Hitable} from "./hitable";
+import { CollisionCategory } from '../enums/collision-category';
+import { MetaConfiguration } from '../models/meta-configuration';
+import { Hitable } from '../models/hitable';
 
 export enum FleshblobAnimationKeys {
     DOWN_LEFT = 'fleshblobDownLeft',
@@ -13,7 +13,7 @@ export enum FleshblobAnimationKeys {
     DEATH_UP_RIGHT = 'fleshblobDeathUpRight'
 }
 
-export class Fleshblob extends Phaser.Physics.Matter.Sprite implements Hitable{
+export class Fleshblob extends Phaser.Physics.Matter.Sprite implements Hitable {
 
     private despawnCallback!: Function;
     private hitpoints = 50;
@@ -38,7 +38,7 @@ export class Fleshblob extends Phaser.Physics.Matter.Sprite implements Hitable{
             height: this.height / 2 + 4
         }, { frictionAir: 0 });
 
-        const metaConfig: MetaConfig = {
+        const metaConfig: MetaConfiguration = {
             key: 'fleshblob',
             type: 'enemy',
             parent: this,
@@ -48,11 +48,11 @@ export class Fleshblob extends Phaser.Physics.Matter.Sprite implements Hitable{
         this.setData('meta', metaConfig);
 
         // Collision
-        this.setCollisionCategory(CollisionCategories.HITABLE)
+        this.setCollisionCategory(CollisionCategory.HITABLE);
         this.setCollidesWith([
-            // CollisionCategories.PLAYER,
-            CollisionCategories.PLAYER_PROJECTILE,
-            CollisionCategories.PLAYER_PROJECTILE_EXPLOSION
+            // CollisionCategoriesEnum.PLAYER,
+            CollisionCategory.PLAYER_PROJECTILE,
+            CollisionCategory.PLAYER_PROJECTILE_EXPLOSION
         ]);
 
         this.play(FleshblobAnimationKeys.UP_LEFT);

@@ -1,5 +1,5 @@
-import { ProjectileConfig } from '../firearm-config';
-import { Projectile } from '../projectile';
+import { ProjectileConfiguration } from '../models/firearm-configuration';
+import { Projectile } from '../gameObjects/projectile';
 
 
 export class ProjectilePool extends Phaser.GameObjects.Group {
@@ -12,7 +12,7 @@ export class ProjectilePool extends Phaser.GameObjects.Group {
         super(scene, Object.assign(defaults, config));
     }
 
-    spawn(x = 0, y = 0, key: string = 'rifle', angle: number, config: ProjectileConfig): Projectile {
+    spawn(x = 0, y = 0, key: string = 'rifle', angle: number, config: ProjectileConfiguration): Projectile {
 
         const spawnExisting = this.countActive(false) > 0;
         const projectile = super.get(x, y, key); 

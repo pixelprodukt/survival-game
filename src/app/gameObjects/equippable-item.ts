@@ -1,7 +1,7 @@
 import { Vector } from 'matter';
-import { Direction } from './direction';
-import { Equippable } from './equipable';
-import { EquippableItemConfig } from './equippable-item-config';
+import { Direction } from '../enums/direction';
+import { Equippable } from '../models/equipable';
+import { EquippableItemConfiguration } from '../models/equippable-item-configuration';
 import { Player } from './player';
 
 export class EquippableItem extends Phaser.GameObjects.Container implements Equippable {
@@ -19,7 +19,7 @@ export class EquippableItem extends Phaser.GameObjects.Container implements Equi
     constructor(
         public readonly scene: Phaser.Scene, 
         protected readonly parent: Player,
-        protected readonly config: EquippableItemConfig
+        protected readonly config: EquippableItemConfiguration
         ) {
         super(scene);
         this.setPosition(this.parent.x, this.parent.y);

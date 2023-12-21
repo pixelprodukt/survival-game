@@ -1,12 +1,12 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
 import { STONE_CONFIG, TREE_CONFIG } from '../configuration/mineable-configurations';
-import { SceneKeys } from '../configuration/scene-keys';
-import { Player } from '../player';
+import { Scene } from '../enums/scene';
+import { Player } from '../gameObjects/player';
 import { ItemDropPool } from '../pools/item-drop-pool';
 import { MineablePool } from '../pools/mineable-pool';
 import { ProjectilePool } from '../pools/projectile-pool';
 import { FleshblobPool } from '../pools/fleshblob-pool';
-import { Fleshblob } from '../fleshblob';
+import { Fleshblob } from '../gameObjects/fleshblob';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -33,7 +33,7 @@ export class OverworldScene extends Phaser.Scene {
     public blob!: Fleshblob;
 
     constructor() {
-        super(SceneKeys.TEST);
+        super(Scene.TEST);
     }
 
     init(): void {
@@ -98,7 +98,7 @@ export class OverworldScene extends Phaser.Scene {
             }
         });*/
 
-        this.scene.get(SceneKeys.UI_OVERLAY).events.on('toolbarChanged', (data: any) => {
+        this.scene.get(Scene.UI_OVERLAY).events.on('toolbarChanged', (data: any) => {
             console.log('data', data);
         });
     }
