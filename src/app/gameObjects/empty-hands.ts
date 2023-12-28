@@ -4,7 +4,7 @@ import { Player } from './player';
 export class EmptyHands extends EquippableItem {
 
     constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player) {
-        super(scene, parent, {
+        super(scene, {
             spriteKey: 'unequipped',
             useSoundKey: 'swing01',
             useSoundVolume: 0.5,

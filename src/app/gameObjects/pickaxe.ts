@@ -7,8 +7,8 @@ export class Pickaxe extends EquippableItem {
 
     private collisionBody: MatterJS.BodyType | null = null;
 
-    constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player) {
-        super(scene, parent, {
+    constructor(public readonly scene: Phaser.Scene) {
+        super(scene, {
             spriteKey: 'pickaxe',
             useSoundKey: 'swing01',
             useSoundVolume: 0.5,
@@ -19,7 +19,7 @@ export class Pickaxe extends EquippableItem {
         });
     }
 
-    override use(): void {
+    override use(parent: Player): void {
 
         if (this.canUse) {
             this.canUse = false;
@@ -33,7 +33,7 @@ export class Pickaxe extends EquippableItem {
                 }
             });
 
-            if (this.parent.isFacingLeft) {
+            if (parent.isFacingLeft) {
                 timeline.add({
                     targets: this.sprite,
                     x: '-=4',
@@ -61,7 +61,7 @@ export class Pickaxe extends EquippableItem {
                         }
                     },
                     onUpdate: (tween: Phaser.Tweens.Tween) => {
-                        if (!this.parent.isFacingLeft) {
+                        if (!parent.isFacingLeft) {
                             this.sprite.x = tween.data[0].start!;
                             this.sprite.y = tween.data[1].start!;
                             this.sprite.angle = tween.data[2].start!;
@@ -72,7 +72,7 @@ export class Pickaxe extends EquippableItem {
                 });
             }
 
-            if (this.parent.isFacingRight) {
+            if (parent.isFacingRight) {
                 timeline.add({
                     targets: this.sprite,
                     x: '+=4',
@@ -100,7 +100,7 @@ export class Pickaxe extends EquippableItem {
                         }
                     },
                     onUpdate: (tween: Phaser.Tweens.Tween) => {
-                        if (!this.parent.isFacingRight) {
+                        if (!parent.isFacingRight) {
                             this.sprite.x = tween.data[0].start!;
                             this.sprite.y = tween.data[1].start!;
                             this.sprite.angle = tween.data[2].start!;

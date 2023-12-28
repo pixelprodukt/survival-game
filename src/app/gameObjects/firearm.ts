@@ -15,8 +15,8 @@ export class Firearm extends EquippableItem {
 
     private projectilePool!: ProjectilePool;
 
-    constructor(public readonly scene: Phaser.Scene, protected readonly parent: Player, protected readonly config: FirearmConfiguration) {
-        super(scene, parent, config);
+    constructor(public readonly scene: Phaser.Scene, protected readonly config: FirearmConfiguration) {
+        super(scene, config);
 
         this.projectilePool = getOverworldScene(scene).projectilePool;
 
@@ -45,18 +45,18 @@ export class Firearm extends EquippableItem {
         }) as Phaser.Animations.Animation;
     }
 
-    override use(): void {
+    override use(parent: Player): void {
         if (this.canUse) {
             this.canUse = false;
-            this.muzzleSprite.play(this.spriteKey + 'MuzzleAnim').depth = this.parent.y + 1;
+            this.muzzleSprite.play(this.spriteKey + 'MuzzleAnim').depth = parent.y + 1;
             this.spawnProjectile(this.x, this.y);
             this.useSound.play({ volume: 0.6 });
             setTimeout(() => { this.canUse = true; }, this.fireRate);
         }
     }
 
-    override update(delta: number): void {
-        super.update(delta);
+    override update(parent: Player, delta: number): void {
+        super.update(parent, delta);
         this.sprite.angle = this.mouseTarget;
         this.muzzleSprite.x = this.x;
         this.muzzleSprite.y = this.y;

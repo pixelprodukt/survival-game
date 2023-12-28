@@ -60,15 +60,15 @@ export class Player {
         this.initAnimations();
         this.walkSounds = [this.scene.sound.add('step01'), this.scene.sound.add('step02'), this.scene.sound.add('step03')];
 
-        this.pickaxe = new Pickaxe(this.scene, this);
-        // this.pickaxe.setVisible(false);
-        this.rifle = new Firearm(this.scene, this, RIFLE_CONFIG);
+        this.pickaxe = new Pickaxe(this.scene);
+        this.pickaxe.setVisible(false);
+        this.rifle = new Firearm(this.scene, RIFLE_CONFIG);
         this.rifle.setVisible(false);
-
+this.equipItem('rifle');
         // this.equippedItem = this.pickaxe;
-        // thisa.equippedItem = this.rifle;
+        // this.equippedItem = this.rifle;
 
-        this.equippedItem = new EmptyHands(this.scene, this);
+        // this.equippedItem = new EmptyHands(this.scene, this);
 
         circle.onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
             const gameObject = data.bodyB.gameObject as Phaser.GameObjects.GameObject;
@@ -91,7 +91,7 @@ export class Player {
 
     useEquippedItem(): void {
         if (this.equippedItem) {
-            this.equippedItem.use();
+            this.equippedItem.use(this);
         }
     }
 
@@ -162,7 +162,7 @@ export class Player {
         }
 
         if (this.equippedItem) {
-            this.equippedItem.update(delta);
+            this.equippedItem.update(this, delta);
         }
         this.sprite.depth = this.sprite.y
     }

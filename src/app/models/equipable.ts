@@ -1,3 +1,5 @@
+import { Player } from '../gameObjects/player';
+
 export interface Equippable {
-    use(): void;
+    use(parent: Player): void;
 }
