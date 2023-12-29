@@ -1,51 +1,10 @@
 import { Scene } from '../enums/scene';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
-import { EquippableItem } from '../gameObjects/equippable-item';
 import { Firearm } from '../gameObjects/firearm';
 import { RIFLE_CONFIG } from '../configuration/firearm-configurations';
 import { Pickaxe } from '../gameObjects/pickaxe';
-
-class ItemSlot extends Phaser.GameObjects.Zone {
-
-    private inventoryItem: InventoryItem | null = null;
-
-    constructor(
-        scene: Phaser.Scene,
-        x: number,
-        y: number,
-        public readonly sprite: Phaser.GameObjects.Sprite
-    ) {
-        super(scene, x, y, 16, 16);
-        this.setRectangleDropZone(16, 16);
-        this.scene.add.existing(this);
-    }
-
-    public hasItem(): boolean {
-        return this.inventoryItem !== null;
-    }
-
-    public addItem(item: InventoryItem): void {
-        this.inventoryItem = item;
-        this.inventoryItem.slot = this;
-        this.inventoryItem.sprite.x = this.x;
-        this.inventoryItem.sprite.y = this.y;
-    }
-
-    public removeItem(): void {
-        this.inventoryItem = null;
-    }
-
-    public getItem(): InventoryItem | null {
-        return this.inventoryItem;
-    }
-}
-
-export interface InventoryItem {
-    sprite: Phaser.GameObjects.Sprite;
-    slot?: ItemSlot;
-    quantity: number;
-    equippableItem: EquippableItem;
-}
+import { ItemSlot } from '../ui/item-slot';
+import { InventoryItem } from '../models/inventory-item';
 
 export class UiOverlayScene extends Phaser.Scene {
 
@@ -99,7 +58,6 @@ export class UiOverlayScene extends Phaser.Scene {
             item.equippableItem.setVisible(false);
 
             item.sprite.on('dragstart', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-                console.log('dragstart slotIndex', item.slot?.getData('slotIndex'));
                 this.children.bringToTop(item.sprite);
                 item.slot!.removeItem();
             });
@@ -110,7 +68,6 @@ export class UiOverlayScene extends Phaser.Scene {
             });
 
             item.sprite.on('drop', (pointer: Phaser.Input.Pointer, zone: Phaser.GameObjects.Zone) => {
-                console.log('zone', zone);
                 const slot = zone as ItemSlot;
                 if (slot.hasItem()) {
                     item.sprite.x = item.slot!.x;
@@ -119,6 +76,7 @@ export class UiOverlayScene extends Phaser.Scene {
                 } else {
                     slot.addItem(item);
                 }
+                this.events.emit('toolbarChanged', this.toolbarSlots[this.currentActiveToolbarSpriteCounter].getItem());
             });
 
             item.sprite.on('dragend', (pointer: Phaser.Input.Pointer, endpointX: number, endpointY: number, dropped: boolean) => {

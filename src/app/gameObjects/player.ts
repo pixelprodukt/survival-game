@@ -7,7 +7,8 @@ import { Firearm } from './firearm';
 import { Pickaxe } from './pickaxe';
 import { EmptyHands } from './empty-hands';
 import { PlayerAnimation } from '../enums/player-animation';
-import { InventoryItem } from '../scenes/ui-overlay-scene';
+
+import { InventoryItem } from '../models/inventory-item';
 
 interface Animations {
     idleDownRight: Phaser.Animations.Animation;

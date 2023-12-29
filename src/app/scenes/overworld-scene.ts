@@ -7,7 +7,8 @@ import { MineablePool } from '../pools/mineable-pool';
 import { ProjectilePool } from '../pools/projectile-pool';
 import { FleshblobPool } from '../pools/fleshblob-pool';
 import { Fleshblob } from '../gameObjects/fleshblob';
-import { InventoryItem } from './ui-overlay-scene';
+
+import { InventoryItem } from '../models/inventory-item';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
