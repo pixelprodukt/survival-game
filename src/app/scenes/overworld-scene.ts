@@ -7,6 +7,7 @@ import { MineablePool } from '../pools/mineable-pool';
 import { ProjectilePool } from '../pools/projectile-pool';
 import { FleshblobPool } from '../pools/fleshblob-pool';
 import { Fleshblob } from '../gameObjects/fleshblob';
+import { InventoryItem } from './ui-overlay-scene';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -98,8 +99,12 @@ export class OverworldScene extends Phaser.Scene {
             }
         });*/
 
-        this.scene.get(Scene.UI_OVERLAY).events.on('toolbarChanged', (data: any) => {
-            console.log('data', data);
+        this.scene.get(Scene.UI_OVERLAY).events.on('toolbarChanged', (item: InventoryItem) => {
+            if (item == null) {
+                this.player.equipItem(null);
+            } else {
+                this.player.equipItem(item.equippableItem);
+            }
         });
     }
 
@@ -164,11 +169,11 @@ export class OverworldScene extends Phaser.Scene {
         const norVec = new Phaser.Math.Vector2(x, y).normalize();
         this.player.setVelocity(norVec.x * Player.SPEED, norVec.y * Player.SPEED);
 
-        if (this.keyOne.isDown) {
+        /*if (this.keyOne.isDown) {
             this.player.equipItem('rifle');
         }
         if (this.keyTwo.isDown) {
             this.player.equipItem('pickaxe');
-        }
+        }*/
     }
 }

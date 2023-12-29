@@ -7,6 +7,7 @@ import { Firearm } from './firearm';
 import { Pickaxe } from './pickaxe';
 import { EmptyHands } from './empty-hands';
 import { PlayerAnimation } from '../enums/player-animation';
+import { InventoryItem } from '../scenes/ui-overlay-scene';
 
 interface Animations {
     idleDownRight: Phaser.Animations.Animation;
@@ -38,7 +39,12 @@ export class Player {
         const bodies = this.scene.matter.bodies;
         const rect = bodies.rectangle(0, 0, 8, 4);
         const circle = bodies.circle(0, 0, 18, { isSensor: true, label: 'playerSensor' });
-        const compoundBody = this.scene.matter.body.create({ parts: [rect, circle], inertia: Infinity, frictionAir: 0.2, mass: 10 });
+        const compoundBody = this.scene.matter.body.create({
+            parts: [rect, circle],
+            inertia: Infinity,
+            frictionAir: 0.2,
+            mass: 10
+        });
 
         this.playerSprite = this.scene.matter.add.sprite(0, 0, 'nadia', 3);
 
@@ -54,7 +60,7 @@ export class Player {
         this.playerSprite.setOrigin(0.5, 0.9);
 
         // Collision Setup
-        this.playerSprite.setCollisionCategory(CollisionCategory.PLAYER)
+        this.playerSprite.setCollisionCategory(CollisionCategory.PLAYER);
         this.playerSprite.setCollidesWith([CollisionCategory.RESOURCE_OBJECT, CollisionCategory.ITEM_DROP]);
 
         this.initAnimations();
@@ -64,7 +70,8 @@ export class Player {
         this.pickaxe.setVisible(false);
         this.rifle = new Firearm(this.scene, RIFLE_CONFIG);
         this.rifle.setVisible(false);
-this.equipItem('rifle');
+
+        // this.equipItem('rifle');
         // this.equippedItem = this.pickaxe;
         // this.equippedItem = this.rifle;
 
@@ -86,7 +93,7 @@ this.equipItem('rifle');
             if (metaData?.mineable) {
                 metaData.parent.isActiveForPointer = false;
             }
-        }
+        };
     }
 
     useEquippedItem(): void {
@@ -95,17 +102,10 @@ this.equipItem('rifle');
         }
     }
 
-    equipItem(name: string): void {
-        if (name === 'rifle') {
-            this.pickaxe.setVisible(false);
-            this.rifle.setVisible(true);
-            this.equippedItem = this.rifle;
-        }
-        if (name === 'pickaxe') {
-            this.rifle.setVisible(false);
-            this.pickaxe.setVisible(true);
-            this.equippedItem = this.pickaxe;
-        }
+    equipItem(item: EquippableItem | null): void {
+        this.equippedItem && this.equippedItem!.setVisible(false);
+        item && item.setVisible(true);
+        this.equippedItem = item;
     }
 
     update(_time: number, delta: number): void {
@@ -146,16 +146,28 @@ this.equipItem('rifle');
         } else {
             switch (this._direction) {
                 case Direction.DOWN_LEFT:
-                    this.sprite.play({ key: PlayerAnimation.WALK_DOWN_LEFT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_DOWN_LEFT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.DOWN_RIGHT:
-                    this.sprite.play({ key: PlayerAnimation.WALK_DOWN_RIGHT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_DOWN_RIGHT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.UP_LEFT:
-                    this.sprite.play({ key: PlayerAnimation.WALK_UP_LEFT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_UP_LEFT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.UP_RIGHT:
-                    this.sprite.play({ key: PlayerAnimation.WALK_UP_RIGHT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_UP_RIGHT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
             }
             this.playRandomWalkSound(delta);
@@ -164,7 +176,7 @@ this.equipItem('rifle');
         if (this.equippedItem) {
             this.equippedItem.update(this, delta);
         }
-        this.sprite.depth = this.sprite.y
+        this.sprite.depth = this.sprite.y;
     }
 
     setPosition(x: number, y: number): void {
@@ -233,11 +245,12 @@ this.equipItem('rifle');
             this.walkSounds[getRandomInt(this.walkSounds.length)].play();
         }
         if (this.stepSoundInterval < 350) {
-            this.stepSoundInterval += delta
+            this.stepSoundInterval += delta;
         } else {
             this.stepSoundInterval = 0;
         }
     }
+
     get sprite(): Phaser.Physics.Matter.Sprite {
         return this.playerSprite;
     }

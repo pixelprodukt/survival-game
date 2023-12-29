@@ -5,34 +5,54 @@ import { Firearm } from '../gameObjects/firearm';
 import { RIFLE_CONFIG } from '../configuration/firearm-configurations';
 import { Pickaxe } from '../gameObjects/pickaxe';
 
-class ToolbarSlot {
+class ItemSlot extends Phaser.GameObjects.Zone {
+
+    private inventoryItem: InventoryItem | null = null;
+
     constructor(
-        public readonly sprite: Phaser.GameObjects.Sprite,
-        public readonly dropZone: Phaser.GameObjects.Zone,
-        public inventoryItem: InventoryItem | null
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        public readonly sprite: Phaser.GameObjects.Sprite
     ) {
+        super(scene, x, y, 16, 16);
+        this.setRectangleDropZone(16, 16);
+        this.scene.add.existing(this);
     }
 
     public hasItem(): boolean {
         return this.inventoryItem !== null;
     }
 
-    public removeItemFromSlot(): void {
+    public addItem(item: InventoryItem): void {
+        this.inventoryItem = item;
+        this.inventoryItem.slot = this;
+        this.inventoryItem.sprite.x = this.x;
+        this.inventoryItem.sprite.y = this.y;
+    }
+
+    public removeItem(): void {
         this.inventoryItem = null;
+    }
+
+    public getItem(): InventoryItem | null {
+        return this.inventoryItem;
     }
 }
 
-interface InventoryItem {
+export interface InventoryItem {
     sprite: Phaser.GameObjects.Sprite;
-    slotIndex: number;
+    slot?: ItemSlot;
     quantity: number;
     equippableItem: EquippableItem;
 }
 
 export class UiOverlayScene extends Phaser.Scene {
 
-    private toolbarSlots: ToolbarSlot[] = [];
-    private currentActiveToolbarSpriteCounter: number = 0;
+    private toolbarSlots: ItemSlot[] = [];
+    private numberOfToolbarSlots = 8;
+    private items: InventoryItem[] = [];
+    private currentActiveToolbarSpriteCounter: number = 1;
 
     constructor() {
         super(Scene.UI_OVERLAY);
@@ -48,174 +68,71 @@ export class UiOverlayScene extends Phaser.Scene {
 
         const toolbarYPosition = (CANVAS_HEIGHT / SCALE) - 10;
 
-        const itemRifle: InventoryItem = {
+        this.items.push({
             sprite: this.add.sprite(110, toolbarYPosition, 'rifle_icon', 0).setInteractive({ draggable: true }),
             quantity: 1,
-            slotIndex: 0,
-            equippableItem: new Firearm(this, RIFLE_CONFIG)
-        };
-        // itemRifle.sprite.setDepth(100);
-
-        const itemPickaxe: InventoryItem = {
+            equippableItem: new Firearm(this.scene.get(Scene.TEST), RIFLE_CONFIG)
+        });
+        this.items.push({
             sprite: this.add.sprite(126, toolbarYPosition, 'pickaxe_icon', 0).setInteractive({ draggable: true }),
             quantity: 1,
-            slotIndex: 1,
-            equippableItem: new Pickaxe(this)
-        };
-        // itemPickaxe.sprite.setDepth(100);
+            equippableItem: new Pickaxe(this.scene.get(Scene.TEST))
+        });
 
-        this.toolbarSlots = [
-            new ToolbarSlot(
-                this.add.sprite(110, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(110, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                itemRifle
-            ),
-            new ToolbarSlot(
-                this.add.sprite(126, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(126, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                itemPickaxe
-            ),
-            new ToolbarSlot(
-                this.add.sprite(142, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(142, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                null
-            ),
-            new ToolbarSlot(
-                this.add.sprite(158, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(158, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                null
-            ),
-            new ToolbarSlot(
-                this.add.sprite(174, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(174, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                null
-            ),
-            new ToolbarSlot(
-                this.add.sprite(190, toolbarYPosition, 'toolbar', 0),
-                this.add.zone(190, toolbarYPosition, 16, 16).setRectangleDropZone(16, 16),
-                null
-            )
-        ];
-
-        this.children.bringToTop(itemPickaxe.sprite);
-        this.children.bringToTop(itemRifle.sprite);
-
-        for (let i = 0; i < this.toolbarSlots.length; i++) {
-            this.toolbarSlots[i].dropZone.setData('slotIndex', i);
+        for (let i = 0; i < this.numberOfToolbarSlots; i++) {
+            this.toolbarSlots.push(new ItemSlot(
+                this,
+                110 + (i * 16),
+                toolbarYPosition,
+                this.add.sprite(110 + (i * 16), toolbarYPosition, 'toolbar', 0)
+            ));
+            this.toolbarSlots[i].setData('slotIndex', i);
         }
 
-        // rifle
-        itemRifle.sprite.on('dragstart', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-            this.children.bringToTop(itemRifle.sprite);
-            this.toolbarSlots[itemRifle.slotIndex].removeItemFromSlot();
+        this.children.bringToTop(this.items[0].sprite);
+        this.children.bringToTop(this.items[1].sprite);
+
+        this.toolbarSlots[0].addItem(this.items[0]);
+        this.toolbarSlots[1].addItem(this.items[1]);
+
+        this.items.forEach((item: InventoryItem) => {
+            item.equippableItem.setVisible(false);
+
+            item.sprite.on('dragstart', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+                console.log('dragstart slotIndex', item.slot?.getData('slotIndex'));
+                this.children.bringToTop(item.sprite);
+                item.slot!.removeItem();
+            });
+
+            item.sprite.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
+                item.sprite.x = dragX;
+                item.sprite.y = dragY;
+            });
+
+            item.sprite.on('drop', (pointer: Phaser.Input.Pointer, zone: Phaser.GameObjects.Zone) => {
+                console.log('zone', zone);
+                const slot = zone as ItemSlot;
+                if (slot.hasItem()) {
+                    item.sprite.x = item.slot!.x;
+                    item.sprite.y = item.slot!.y;
+                    item.slot?.addItem(item);
+                } else {
+                    slot.addItem(item);
+                }
+            });
+
+            item.sprite.on('dragend', (pointer: Phaser.Input.Pointer, endpointX: number, endpointY: number, dropped: boolean) => {
+                if (!dropped) {
+                    item.slot?.addItem(item);
+                }
+            });
         });
-
-        itemRifle.sprite.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-            itemRifle.sprite.x = dragX;
-            itemRifle.sprite.y = dragY;
-        });
-
-        itemRifle.sprite.on('drop', (pointer: Phaser.Input.Pointer, zone: Phaser.GameObjects.Zone) => {
-            console.log('zone', zone);
-            if (this.toolbarSlots[zone.getData('slotIndex')].hasItem()) {
-                itemRifle.sprite.x = itemRifle.sprite.input.dragStartX;
-                itemRifle.sprite.y = itemRifle.sprite.input.dragStartY;
-                this.toolbarSlots[itemRifle.slotIndex].inventoryItem = itemRifle;
-            } else {
-                itemRifle.sprite.x = zone.x;
-                itemRifle.sprite.y = zone.y;
-                itemRifle.slotIndex = zone.getData('slotIndex');
-                this.toolbarSlots[itemRifle.slotIndex].inventoryItem = itemRifle;
-            }
-            console.log('toolbarSlot', this.toolbarSlots[itemRifle.slotIndex]);
-            console.log('itemRifle', itemRifle);
-        });
-
-        itemRifle.sprite.on('dragend', (pointer: Phaser.Input.Pointer, endpointX: number, endpointY: number, dropped: boolean) => {
-            if (!dropped) {
-                itemRifle.sprite.x = itemRifle.sprite.input.dragStartX;
-                itemRifle.sprite.y = itemRifle.sprite.input.dragStartY;
-                this.toolbarSlots[itemRifle.slotIndex].inventoryItem = itemRifle;
-            }
-        });
-
-        // pickaxe
-        itemPickaxe.sprite.on('dragstart', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-            this.children.bringToTop(itemPickaxe.sprite);
-            this.toolbarSlots[itemPickaxe.slotIndex].removeItemFromSlot();
-        });
-
-        itemPickaxe.sprite.on('drag', (pointer: Phaser.Input.Pointer, dragX: number, dragY: number) => {
-            itemPickaxe.sprite.x = dragX;
-            itemPickaxe.sprite.y = dragY;
-        });
-
-        itemPickaxe.sprite.on('drop', (pointer: Phaser.Input.Pointer, zone: Phaser.GameObjects.Zone) => {
-            console.log('zone', zone);
-            if (this.toolbarSlots[zone.getData('slotIndex')].hasItem()) {
-                itemPickaxe.sprite.x = itemPickaxe.sprite.input.dragStartX;
-                itemPickaxe.sprite.y = itemPickaxe.sprite.input.dragStartY;
-                this.toolbarSlots[itemPickaxe.slotIndex].inventoryItem = itemPickaxe;
-            } else {
-                itemPickaxe.sprite.x = zone.x;
-                itemPickaxe.sprite.y = zone.y;
-                itemPickaxe.slotIndex = zone.getData('slotIndex');
-                this.toolbarSlots[itemPickaxe.slotIndex].inventoryItem = itemPickaxe;
-            }
-            console.log('toolbarSlot', this.toolbarSlots[itemPickaxe.slotIndex]);
-            console.log('itemPickaxe', itemPickaxe);
-        });
-
-        itemPickaxe.sprite.on('dragend', (pointer: Phaser.Input.Pointer, endpointX: number, endpointY: number, dropped: boolean) => {
-            if (!dropped) {
-                itemPickaxe.sprite.x = itemPickaxe.sprite.input.dragStartX;
-                itemPickaxe.sprite.y = itemPickaxe.sprite.input.dragStartY;
-                this.toolbarSlots[itemPickaxe.slotIndex].inventoryItem = itemPickaxe;
-            }
-        });
-
-        // drag and drop inventory
-        // https://www.youtube.com/watch?v=l3zSRRB_SZ8
-        // https://github.com/awweather/inventory-tutorial/tree/master
-        // https://www.youtube.com/@devbydusk
-
-        // https://labs.phaser.io/view.html?src=src/input\zones\drop%20zone.js
-        // https://labs.phaser.io/view.html?src=src/input\zones\circular%20drop%20zone.js
-        // https://labs.phaser.io/view.html?src=src/input\dragging\snap%20to%20grid%20on%20drag.js
-
-
-        /*this.input.on('dragstart', (pointer: any, gameObject: Phaser.GameObjects.GameObject, a: any, b: any) => {
-            this.children.bringToTop(gameObject);
-            console.log('a', a);
-            console.log('b', b);
-        });
-
-        this.input.on('drag', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
-            const sprite = gameObject as Phaser.GameObjects.Sprite;
-            sprite.x = dragX;
-            sprite.y = dragY;
-        });
-
-        this.input.on('drop', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dropZone: Phaser.GameObjects.Zone) => {
-            const sprite = gameObject as Phaser.GameObjects.Sprite;
-            sprite.x = dropZone.x;
-            sprite.y = dropZone.y;
-        });
-
-        this.input.on('dragend', (pointer: any, gameObject: Phaser.GameObjects.GameObject, dropped: boolean) => {
-            if (!dropped) {
-                const sprite = gameObject as Phaser.GameObjects.Sprite;
-                sprite.x = gameObject.input.dragStartX;
-                sprite.y = gameObject.input.dragStartY;
-            }
-        });*/
 
         this.toolbarSlots[this.currentActiveToolbarSpriteCounter].sprite.setFrame(1);
+        this.events.emit('toolbarChanged', this.toolbarSlots[this.currentActiveToolbarSpriteCounter].getItem());
 
         this.input.on(Phaser.Input.Events.POINTER_WHEEL, (pointer: any) => {
-            console.log('wheel event', pointer);
-
-            this.toolbarSlots.forEach((slot: ToolbarSlot) => {
+            this.toolbarSlots.forEach((slot: ItemSlot) => {
                 slot.sprite.setFrame(0);
             });
 
@@ -234,7 +151,7 @@ export class UiOverlayScene extends Phaser.Scene {
             }
             this.toolbarSlots[this.currentActiveToolbarSpriteCounter].sprite.setFrame(1);
 
-            this.events.emit('toolbarChanged', { data: this.toolbarSlots[this.currentActiveToolbarSpriteCounter].inventoryItem });
+            this.events.emit('toolbarChanged', this.toolbarSlots[this.currentActiveToolbarSpriteCounter].getItem());
         });
 
     }
