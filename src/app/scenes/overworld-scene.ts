@@ -9,6 +9,7 @@ import { FleshblobPool } from '../pools/fleshblob-pool';
 import { Fleshblob } from '../gameObjects/fleshblob';
 
 import { InventoryItem } from '../models/inventory-item';
+import { ToolbarEvent } from '../enums/toolbar-event';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -100,7 +101,7 @@ export class OverworldScene extends Phaser.Scene {
             }
         });*/
 
-        this.scene.get(Scene.UI_OVERLAY).events.on('toolbarChanged', (item: InventoryItem) => {
+        this.scene.get(Scene.UI_OVERLAY).events.on(ToolbarEvent.ACTIVE_SLOT_CHANGED, (item: InventoryItem) => {
             if (item == null) {
                 this.player.equipItem(null);
             } else {
