@@ -3,15 +3,16 @@ import { InventoryItem } from '../models/inventory-item';
 export class ItemSlot extends Phaser.GameObjects.Zone {
 
     private inventoryItem: InventoryItem | null = null;
+    public readonly sprite!: Phaser.GameObjects.Sprite;
 
     constructor(
         scene: Phaser.Scene,
         x: number,
-        y: number,
-        public readonly sprite: Phaser.GameObjects.Sprite
+        y: number
     ) {
         super(scene, x, y, 16, 16);
         this.setRectangleDropZone(16, 16);
+        this.sprite = this.scene.add.sprite(x, y, 'toolbar', 0);
         this.scene.add.existing(this);
     }
 

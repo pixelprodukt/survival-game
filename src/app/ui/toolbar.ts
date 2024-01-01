@@ -4,20 +4,21 @@ import { ToolbarEvent } from '../enums/toolbar-event';
 import { InventoryItem } from '../models/inventory-item';
 
 export class Toolbar {
+
     private readonly SLOT_SIZE: number = 16;
     private readonly NUMBER_OF_SLOTS: number = 8;
     private readonly X_POSITION: number = (((CANVAS_WIDTH / SCALE) - (this.NUMBER_OF_SLOTS * this.SLOT_SIZE)) / 2) + (this.SLOT_SIZE / 2);
     private readonly Y_POSITION : number = (CANVAS_HEIGHT / SCALE) - 10;
+
     private currentActiveToolbarSpriteCounter: number = 0;
     private toolbarSlots: ItemSlot[] = [];
 
-    constructor(private scene: Phaser.Scene) {
+    constructor(private readonly scene: Phaser.Scene) {
         for (let i = 0; i < this.NUMBER_OF_SLOTS; i++) {
             this.toolbarSlots.push(new ItemSlot(
                 this.scene,
                 this.X_POSITION + (i * this.SLOT_SIZE),
-                this.Y_POSITION,
-                this.scene.add.sprite(this.X_POSITION + (i * this.SLOT_SIZE), this.Y_POSITION, 'toolbar', 0)
+                this.Y_POSITION
             ));
             this.toolbarSlots[i].setData('slotIndex', i);
         }

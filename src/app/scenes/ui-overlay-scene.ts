@@ -7,6 +7,7 @@ import { ItemSlot } from '../ui/item-slot';
 import { InventoryItem } from '../models/inventory-item';
 import { ToolbarEvent } from '../enums/toolbar-event';
 import { Toolbar } from '../ui/toolbar';
+import { Inventory } from '../ui/inventory';
 
 export class UiOverlayScene extends Phaser.Scene {
 
@@ -25,6 +26,7 @@ export class UiOverlayScene extends Phaser.Scene {
         this.cameras.main.setZoom(SCALE);
 
         const toolbar = new Toolbar(this);
+        const inventory = new Inventory(this);
 
         this.items.push({
             sprite: this.add.sprite(0, 0, 'rifle_icon', 0).setInteractive({ draggable: true }),
@@ -84,6 +86,12 @@ export class UiOverlayScene extends Phaser.Scene {
                 toolbar.selectPreviousSlot();
             }
             this.events.emit(ToolbarEvent.ACTIVE_SLOT_CHANGED, toolbar.getItem());
+        });
+
+        this.input.keyboard.on('keydown-TAB', () => {
+            console.log('tab down');
+
+            inventory.visible ? inventory.setActiveAndVisible(false) : inventory.setActiveAndVisible(true);
         });
     }
 
