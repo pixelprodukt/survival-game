@@ -1,5 +1,5 @@
-import { Mineable } from '../mineable';
-import { MineableConfig } from '../mineable-config';
+import { Mineable } from '../gameObjects/mineable';
+import { MineableConfiguration } from '../models/mineable-configuration';
 
 export class MineablePool extends Phaser.GameObjects.Group {
 
@@ -11,7 +11,7 @@ export class MineablePool extends Phaser.GameObjects.Group {
         super(scene, Object.assign(defaults, config));
     }
 
-    spawn(x = 0, y = 0, config: MineableConfig): void {
+    spawn(x = 0, y = 0, config: MineableConfiguration): void {
         const spawnExisting = this.countActive(false) > 0;
         const mineable: Mineable = super.get(x, y, config.imageKey);
 

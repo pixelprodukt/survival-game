@@ -1,6 +1,6 @@
 import { Vector } from 'matter';
 
-export interface EquippableItemConfig {
+export interface EquippableItemConfiguration {
     spriteKey: string;
     useSoundKey: string;
     useSoundVolume: number;

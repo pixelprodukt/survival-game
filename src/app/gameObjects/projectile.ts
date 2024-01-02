@@ -1,7 +1,7 @@
-import { ProjectileConfig } from './firearm-config';
-import { CollisionCategories } from './configuration/collision-categories';
-import { Hitable } from './hitable';
-import { MetaConfig } from './meta-config';
+import { ProjectileConfiguration } from '../models/firearm-configuration';
+import { CollisionCategory } from '../enums/collision-category';
+import { Hitable } from '../models/hitable';
+import { MetaConfiguration } from '../models/meta-configuration';
 
 export class Projectile extends Phaser.Physics.Matter.Sprite {
 
@@ -11,7 +11,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
     private _markForDestroy: boolean = false;
     private timeLived = 0;
 
-    config!: ProjectileConfig;
+    config!: ProjectileConfiguration;
 
     constructor(
         public readonly scene: Phaser.Scene,
@@ -22,7 +22,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
         super(scene.matter.world, x, y, weaponSpritesheetKey, 2);
     }
 
-    init(x: number, y: number, angle: number, config: ProjectileConfig): void {
+    init(x: number, y: number, angle: number, config: ProjectileConfiguration): void {
         this.setTexture(this.weaponSpritesheetKey, 2);
         this.config = config;
         this.speed = config.speed;
@@ -35,8 +35,8 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
         this.angle = angle;
 
         // Collision Setup
-        this.setCollisionCategory(CollisionCategories.PLAYER_PROJECTILE);
-        this.setCollidesWith([CollisionCategories.RESOURCE_OBJECT, CollisionCategories.HITABLE]);
+        this.setCollisionCategory(CollisionCategory.PLAYER_PROJECTILE);
+        this.setCollidesWith([CollisionCategory.RESOURCE_OBJECT, CollisionCategory.HITABLE]);
 
         const worldXY = this.scene.input.activePointer.positionToCamera(this.scene.cameras.main) as Phaser.Math.Vector2;
         const vector = new Phaser.Math.Vector2(worldXY.x, worldXY.y).subtract(new Phaser.Math.Vector2(x, y)).normalize();
@@ -55,7 +55,7 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
         this.setOnCollide((data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
 
             const gameObject = data.bodyA.gameObject as Phaser.GameObjects.GameObject;
-            const meta: MetaConfig = gameObject.getData('meta');
+            const meta: MetaConfiguration = gameObject.getData('meta');
 
             if (meta?.hitable) {
                 this.spawnExplosion(data.bodyB.position.x, data.bodyB.position.y);
@@ -91,12 +91,12 @@ export class Projectile extends Phaser.Physics.Matter.Sprite {
                 explosion.depth = y + 2;
 
                 // Collision Setup
-                explosion.setCollisionCategory(CollisionCategories.PLAYER_PROJECTILE_EXPLOSION)
-                explosion.setCollidesWith([CollisionCategories.HITABLE]);
+                explosion.setCollisionCategory(CollisionCategory.PLAYER_PROJECTILE_EXPLOSION)
+                explosion.setCollidesWith([CollisionCategory.HITABLE]);
 
                 explosion.setOnCollide((data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
                     const gameObject = data.bodyA.gameObject as Phaser.GameObjects.GameObject;
-                    const meta: MetaConfig = gameObject.getData('meta');
+                    const meta: MetaConfiguration = gameObject.getData('meta');
                     const hitable = meta.parent as Hitable;
                     hitable.getDamage(this.config.explosionConfig.damage);
                 });

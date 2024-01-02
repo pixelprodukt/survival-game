@@ -1,4 +1,4 @@
-export enum AssetKeys {
+export enum Asset {
     RIFLE = 'rifle',
     ROCKETLAUNCHER = 'rocketlauncher',
 }

@@ -1,9 +1,9 @@
 import OutlinePipelinePlugin from 'phaser3-rex-plugins/plugins/outlinepipeline-plugin';
-import { CollisionCategories } from './configuration/collision-categories';
-import { Hitable } from './hitable';
-import { MineableConfig } from './mineable-config';
-import { MetaConfig } from './meta-config';
-import { getOverworldScene, getRandomInt } from "./configuration/constants";
+import { CollisionCategory } from '../enums/collision-category';
+import { Hitable } from '../models/hitable';
+import { MineableConfiguration } from '../models/mineable-configuration';
+import { MetaConfiguration } from '../models/meta-configuration';
+import { getOverworldScene, getRandomInt } from "../configuration/constants";
 
 export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
 
@@ -12,7 +12,7 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
     private plopSound!: Phaser.Sound.BaseSound;
     private particleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
     private lootDropKeys!: string[];
-    private config!: MineableConfig;
+    private config!: MineableConfiguration;
     private despawnCallback!: Function;
 
     public isActiveForPointer = false;
@@ -27,7 +27,7 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
         super(scene.matter.world, x, y, imageKey);
     }
 
-    init(x: number, y: number, config: MineableConfig, despawnCallback: Function): void {
+    init(x: number, y: number, config: MineableConfiguration, despawnCallback: Function): void {
         this.config = config;
         this.hitpoints = config.hitpoints;
         this.despawnCallback = despawnCallback;
@@ -43,7 +43,7 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
         this.depth = this.y || 0;
         this.lootDropKeys = this.config.lootDropKeys || [];
 
-        const metaConfig: MetaConfig = {
+        const metaConfig: MetaConfiguration = {
             key: this.config.imageKey,
             type: 'mineable',
             parent: this,
@@ -53,11 +53,11 @@ export class Mineable extends Phaser.Physics.Matter.Image implements Hitable {
         this.setData('meta', metaConfig);
 
         // Collision
-        this.setCollisionCategory(CollisionCategories.RESOURCE_OBJECT)
+        this.setCollisionCategory(CollisionCategory.RESOURCE_OBJECT)
         this.setCollidesWith([
-            CollisionCategories.PLAYER,
-            CollisionCategories.PLAYER_PROJECTILE,
-            CollisionCategories.PLAYER_PROJECTILE_EXPLOSION
+            CollisionCategory.PLAYER,
+            CollisionCategory.PLAYER_PROJECTILE,
+            CollisionCategory.PLAYER_PROJECTILE_EXPLOSION
         ]);
 
         //Sounds

@@ -1,25 +1,6 @@
-export interface Assets {
-    tilemaps: AssetResource[];
-    images: AssetResource[];
-    spritesheets: SpritesheetResource[];
-    sounds: AssetResource[];
-}
+import { AssetConfiguration } from '../models/asset-configuration';
 
-export interface AssetResource {
-    key: string;
-    path: string;
-}
-
-export interface SpritesheetResource extends AssetResource {
-    config: SpritesheetConfig;
-}
-
-export interface SpritesheetConfig {
-    frameWidth: number;
-    frameHeight: number;
-}
-
-export const AssetConfiguration: Assets = {
+export const ASSET_CONFIGURATION: AssetConfiguration = {
     tilemaps: [],
     images: [
         {
@@ -49,6 +30,14 @@ export const AssetConfiguration: Assets = {
         {
             key: 'toolbar_icon_selected',
             path: 'assets/ui/toolbar_icon_selected.png'
+        },
+        {
+            key: 'pickaxe_icon',
+            path: 'assets/ui/inventory/pickaxe_icon.png'
+        },
+        {
+            key: 'rifle_icon',
+            path: 'assets/ui/inventory/rifle_icon.png'
         }
     ],
     spritesheets: [
@@ -90,6 +79,16 @@ export const AssetConfiguration: Assets = {
         {
             key: 'fleshblob',
             path: 'assets/spritesheets/fleshblob_enemy.png',
+            config: { frameWidth: 16, frameHeight: 16 }
+        },
+        {
+            key: 'toolbar',
+            path: 'assets/ui/toolbar_spritesheet.png',
+            config: { frameWidth: 16, frameHeight: 16 }
+        },
+        {
+            key: 'unequipped',
+            path: 'assets/spritesheets/unequipped.png',
             config: { frameWidth: 16, frameHeight: 16 }
         }
     ],

@@ -1,11 +1,12 @@
-import { AssetConfiguration, AssetResource, SpritesheetResource } from '../configuration/assets-configuration';
+import { ASSET_CONFIGURATION } from '../configuration/asset-configuration';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, FONT, SCALE } from '../configuration/constants';
-import { SceneKeys } from '../configuration/scene-keys';
+import { Scene } from '../enums/scene';
+import { AssetResource, SpritesheetResource } from '../models/asset-configuration';
 
 export class BootScene extends Phaser.Scene {
 
     constructor() {
-        super(SceneKeys.BOOT);
+        super(Scene.BOOT);
     }
 
     preload(): void {
@@ -77,19 +78,19 @@ export class BootScene extends Phaser.Scene {
             percentText.destroy();
             assetText.destroy();
 
-            this.scene.run(SceneKeys.TEST);
-            this.scene.run(SceneKeys.UI_OVERLAY);
+            this.scene.run(Scene.TEST);
+            this.scene.run(Scene.UI_OVERLAY);
         });
 
-        AssetConfiguration.images.forEach((resource: AssetResource) => {
+        ASSET_CONFIGURATION.images.forEach((resource: AssetResource) => {
             this.load.image(resource.key, resource.path);
         });
 
-        AssetConfiguration.spritesheets.forEach((resource: SpritesheetResource) => {
+        ASSET_CONFIGURATION.spritesheets.forEach((resource: SpritesheetResource) => {
             this.load.spritesheet(resource.key, resource.path, { ...resource.config });
         });
 
-        AssetConfiguration.sounds.forEach((resource: AssetResource) => {
+        ASSET_CONFIGURATION.sounds.forEach((resource: AssetResource) => {
             this.load.audio(resource.key, resource.path);
         });
     }

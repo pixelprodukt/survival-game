@@ -1,6 +1,6 @@
-import { FirearmConfig } from '../firearm-config';
+import { FirearmConfiguration } from '../models/firearm-configuration';
 
-export const RIFLE_CONFIG: FirearmConfig = {
+export const RIFLE_CONFIG: FirearmConfiguration = {
     fireRate: 300,
     spriteKey: 'rifle',
     muzzleFrames: [4, 5, 6, 7],
@@ -25,7 +25,7 @@ export const RIFLE_CONFIG: FirearmConfig = {
     }
 };
 
-export const ROCKETLAUNCHER_CONFIG: FirearmConfig = {
+export const ROCKETLAUNCHER_CONFIG: FirearmConfiguration = {
     fireRate: 900,
     spriteKey: 'rocketlauncher',
     muzzleFrames: [4, 5, 6, 7],

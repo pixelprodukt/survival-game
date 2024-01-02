@@ -1,6 +1,6 @@
 import { Vector } from 'matter';
 
-export interface MineableConfig {
+export interface MineableConfiguration {
     hitpoints: number;
     imageKey: string;
     origin: Vector;

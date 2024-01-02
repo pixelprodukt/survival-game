@@ -1,12 +1,15 @@
 import { CANVAS_HEIGHT, CANVAS_WIDTH, SCALE } from '../configuration/constants';
 import { STONE_CONFIG, TREE_CONFIG } from '../configuration/mineable-configurations';
-import { SceneKeys } from '../configuration/scene-keys';
-import { Player } from '../player';
+import { Scene } from '../enums/scene';
+import { Player } from '../gameObjects/player';
 import { ItemDropPool } from '../pools/item-drop-pool';
 import { MineablePool } from '../pools/mineable-pool';
 import { ProjectilePool } from '../pools/projectile-pool';
 import { FleshblobPool } from '../pools/fleshblob-pool';
-import { Fleshblob } from '../fleshblob';
+import { Fleshblob } from '../gameObjects/fleshblob';
+
+import { InventoryItem } from '../models/inventory-item';
+import { ToolbarEvent } from '../enums/toolbar-event';
 
 const KeyCode: typeof Phaser.Input.Keyboard.KeyCodes = Phaser.Input.Keyboard.KeyCodes;
 
@@ -33,7 +36,7 @@ export class OverworldScene extends Phaser.Scene {
     public blob!: Fleshblob;
 
     constructor() {
-        super(SceneKeys.TEST);
+        super(Scene.TEST);
     }
 
     init(): void {
@@ -69,7 +72,6 @@ export class OverworldScene extends Phaser.Scene {
         this.cameras.main.setLerp(0.05, 0.05);
         this.cameras.main.setZoom(SCALE);
 
-
         // Test Minables
         this.mineablePool.spawn(120, 40, TREE_CONFIG);
         this.mineablePool.spawn(20, 60, TREE_CONFIG);
@@ -84,38 +86,35 @@ export class OverworldScene extends Phaser.Scene {
         // Test Fleshblobs
         this.blob = this.fleshblobPool.spawn(50, -20);
 
-
-        this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
+        /*this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: any) => {
             console.log('distance', Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y));
             if (this.placementMode) {
                 // this.mineablePool.spawn(pointer.worldX, pointer.worldY, TREE_CONFIG);
                 this.fleshblobPool.spawn(pointer.worldX, pointer.worldY);
             }
-            /* this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop');
-            this.itemDropPool.spawn(pointer.worldX, pointer.worldY, 'wood_drop'); */
-        });
+        });*/
 
-        // this.matter.add.mouseSpring();
-
-        this.input.on('pointermove', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
+        /*this.input.on('pointermove', (pointer: any, gameObject: Phaser.GameObjects.GameObject) => {
             const bodies = this.matter.intersectPoint(pointer.worldX, pointer.worldY);
             if (bodies.length) {
                 // console.log(bodies);
             }
-        });
+        });*/
 
-        // UI
-        // const toolbar = [this.add.image(0, 0, 'toolbar_icon')];
+        this.scene.get(Scene.UI_OVERLAY).events.on(ToolbarEvent.ACTIVE_SLOT_CHANGED, (item: InventoryItem) => {
+            if (item == null) {
+                this.player.equipItem(null);
+            } else {
+                this.player.equipItem(item.equippableItem);
+            }
+        });
     }
 
     update(_time: number, delta: number): void {
 
-        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y) < 100) {
+        /*if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.blob.x, this.blob.y) < 100) {
             console.log('blob ai triggered');
-        }
+        }*/
 
         this.handlePlayerControls();
 
@@ -172,11 +171,11 @@ export class OverworldScene extends Phaser.Scene {
         const norVec = new Phaser.Math.Vector2(x, y).normalize();
         this.player.setVelocity(norVec.x * Player.SPEED, norVec.y * Player.SPEED);
 
-        if (this.keyOne.isDown) {
+        /*if (this.keyOne.isDown) {
             this.player.equipItem('rifle');
         }
         if (this.keyTwo.isDown) {
             this.player.equipItem('pickaxe');
-        }
+        }*/
     }
 }

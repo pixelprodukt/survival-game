@@ -1,4 +1,4 @@
-import {Fleshblob, FleshblobAnimationKeys} from "../fleshblob";
+import {Fleshblob, FleshblobAnimationKeys} from "../gameObjects/fleshblob";
 
 export class FleshblobPool extends Phaser.GameObjects.Group {
 

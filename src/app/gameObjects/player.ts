@@ -1,21 +1,14 @@
-import { CollisionCategories } from './configuration/collision-categories';
-import { getRandomInt, PLAYER_FRAMERATE } from './configuration/constants';
-import { RIFLE_CONFIG } from './configuration/firearm-configurations';
-import { Direction } from './direction';
+import { CollisionCategory } from '../enums/collision-category';
+import { getRandomInt, PLAYER_FRAMERATE } from '../configuration/constants';
+import { RIFLE_CONFIG } from '../configuration/firearm-configurations';
+import { Direction } from '../enums/direction';
 import { EquippableItem } from './equippable-item';
 import { Firearm } from './firearm';
 import { Pickaxe } from './pickaxe';
+import { EmptyHands } from './empty-hands';
+import { PlayerAnimation } from '../enums/player-animation';
 
-enum PlayerAnimationKeys {
-    WALK_DOWN_LEFT = 'playerWalkDownLeft',
-    WALK_DOWN_RIGHT = 'playerWalkDownRight',
-    WALK_UP_LEFT = 'playerWalkUpLeft',
-    WALK_UP_RIGHT = 'playerWalkUpRight',
-    IDLE_DOWN_LEFT = 'playerIdleDownLeft',
-    IDLE_DOWN_RIGHT = 'playerIdleDownRight',
-    IDLE_UP_LEFT = 'playerIdleUpLeft',
-    IDLE_UP_RIGHT = 'playerIdleUpRight'
-}
+import { InventoryItem } from '../models/inventory-item';
 
 interface Animations {
     idleDownRight: Phaser.Animations.Animation;
@@ -41,13 +34,18 @@ export class Player {
     private readonly pickaxe!: Pickaxe;
     private readonly rifle!: Firearm;
 
-    public equippedItem!: EquippableItem;
+    public equippedItem: EquippableItem | null = null;
 
     constructor(public scene: Phaser.Scene) {
         const bodies = this.scene.matter.bodies;
         const rect = bodies.rectangle(0, 0, 8, 4);
         const circle = bodies.circle(0, 0, 18, { isSensor: true, label: 'playerSensor' });
-        const compoundBody = this.scene.matter.body.create({ parts: [rect, circle], inertia: Infinity, frictionAir: 0.2, mass: 10 });
+        const compoundBody = this.scene.matter.body.create({
+            parts: [rect, circle],
+            inertia: Infinity,
+            frictionAir: 0.2,
+            mass: 10
+        });
 
         this.playerSprite = this.scene.matter.add.sprite(0, 0, 'nadia', 3);
 
@@ -63,19 +61,22 @@ export class Player {
         this.playerSprite.setOrigin(0.5, 0.9);
 
         // Collision Setup
-        this.playerSprite.setCollisionCategory(CollisionCategories.PLAYER)
-        this.playerSprite.setCollidesWith([CollisionCategories.RESOURCE_OBJECT, CollisionCategories.ITEM_DROP]);
+        this.playerSprite.setCollisionCategory(CollisionCategory.PLAYER);
+        this.playerSprite.setCollidesWith([CollisionCategory.RESOURCE_OBJECT, CollisionCategory.ITEM_DROP]);
 
         this.initAnimations();
         this.walkSounds = [this.scene.sound.add('step01'), this.scene.sound.add('step02'), this.scene.sound.add('step03')];
 
-        this.pickaxe = new Pickaxe(this.scene, this);
-        // this.pickaxe.setVisible(false);
-        this.rifle = new Firearm(this.scene, this, RIFLE_CONFIG);
+        this.pickaxe = new Pickaxe(this.scene);
+        this.pickaxe.setVisible(false);
+        this.rifle = new Firearm(this.scene, RIFLE_CONFIG);
         this.rifle.setVisible(false);
 
-        this.equippedItem = this.pickaxe;
+        // this.equipItem('rifle');
+        // this.equippedItem = this.pickaxe;
         // this.equippedItem = this.rifle;
+
+        // this.equippedItem = new EmptyHands(this.scene, this);
 
         circle.onCollideCallback = (data: Phaser.Types.Physics.Matter.MatterCollisionData) => {
             const gameObject = data.bodyB.gameObject as Phaser.GameObjects.GameObject;
@@ -93,24 +94,19 @@ export class Player {
             if (metaData?.mineable) {
                 metaData.parent.isActiveForPointer = false;
             }
-        }
+        };
     }
 
     useEquippedItem(): void {
-        this.equippedItem.use();
+        if (this.equippedItem) {
+            this.equippedItem.use(this);
+        }
     }
 
-    equipItem(name: string): void {
-        if (name === 'rifle') {
-            this.pickaxe.setVisible(false);
-            this.rifle.setVisible(true);
-            this.equippedItem = this.rifle;
-        }
-        if (name === 'pickaxe') {
-            this.rifle.setVisible(false);
-            this.pickaxe.setVisible(true);
-            this.equippedItem = this.pickaxe;
-        }
+    equipItem(item: EquippableItem | null): void {
+        this.equippedItem && this.equippedItem!.setVisible(false);
+        item && item.setVisible(true);
+        this.equippedItem = item;
     }
 
     update(_time: number, delta: number): void {
@@ -136,50 +132,56 @@ export class Player {
         if (!this.isMoving) {
             switch (this._direction) {
                 case Direction.DOWN_LEFT:
-                    this.sprite.play(PlayerAnimationKeys.IDLE_DOWN_LEFT, true);
+                    this.sprite.play(PlayerAnimation.IDLE_DOWN_LEFT, true);
                     break;
                 case Direction.DOWN_RIGHT:
-                    this.sprite.play(PlayerAnimationKeys.IDLE_DOWN_RIGHT, true);
+                    this.sprite.play(PlayerAnimation.IDLE_DOWN_RIGHT, true);
                     break;
                 case Direction.UP_LEFT:
-                    this.sprite.play(PlayerAnimationKeys.IDLE_UP_LEFT, true);
+                    this.sprite.play(PlayerAnimation.IDLE_UP_LEFT, true);
                     break;
                 case Direction.UP_RIGHT:
-                    this.sprite.play(PlayerAnimationKeys.IDLE_UP_RIGHT, true);
+                    this.sprite.play(PlayerAnimation.IDLE_UP_RIGHT, true);
                     break;
             }
         } else {
             switch (this._direction) {
                 case Direction.DOWN_LEFT:
-                    this.sprite.play({ key: PlayerAnimationKeys.WALK_DOWN_LEFT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_DOWN_LEFT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.DOWN_RIGHT:
-                    this.sprite.play({ key: PlayerAnimationKeys.WALK_DOWN_RIGHT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_DOWN_RIGHT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.UP_LEFT:
-                    this.sprite.play({ key: PlayerAnimationKeys.WALK_UP_LEFT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_UP_LEFT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
                 case Direction.UP_RIGHT:
-                    this.sprite.play({ key: PlayerAnimationKeys.WALK_UP_RIGHT, startFrame: this.playerSprite.anims.currentFrame.index - 1 }, true);
+                    this.sprite.play({
+                        key: PlayerAnimation.WALK_UP_RIGHT,
+                        startFrame: this.playerSprite.anims.currentFrame.index - 1
+                    }, true);
                     break;
             }
             this.playRandomWalkSound(delta);
         }
 
-        this.equippedItem.update(delta);
-        this.sprite.depth = this.sprite.y
+        if (this.equippedItem) {
+            this.equippedItem.update(this, delta);
+        }
+        this.sprite.depth = this.sprite.y;
     }
 
     setPosition(x: number, y: number): void {
         this.playerSprite.setPosition(x, y);
-    }
-
-    setVelocityX(value: number): void {
-        this.playerSprite.setVelocityX(value);
-    }
-
-    setVelocityY(value: number): void {
-        this.playerSprite.setVelocityY(value);
     }
 
     setVelocity(x: number, y: number): void {
@@ -189,49 +191,49 @@ export class Player {
     private initAnimations(): void {
         this.animations = {
             idleDownRight: this.scene.anims.create({
-                key: PlayerAnimationKeys.IDLE_DOWN_RIGHT,
+                key: PlayerAnimation.IDLE_DOWN_RIGHT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [0] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             idleDownLeft: this.scene.anims.create({
-                key: PlayerAnimationKeys.IDLE_DOWN_LEFT,
+                key: PlayerAnimation.IDLE_DOWN_LEFT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [5] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             idleUpRight: this.scene.anims.create({
-                key: PlayerAnimationKeys.IDLE_UP_RIGHT,
+                key: PlayerAnimation.IDLE_UP_RIGHT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [10] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             idleUpLeft: this.scene.anims.create({
-                key: PlayerAnimationKeys.IDLE_UP_LEFT,
+                key: PlayerAnimation.IDLE_UP_LEFT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [15] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             walkDownRight: this.scene.anims.create({
-                key: PlayerAnimationKeys.WALK_DOWN_RIGHT,
+                key: PlayerAnimation.WALK_DOWN_RIGHT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [1, 2, 3, 4] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             walkDownLeft: this.scene.anims.create({
-                key: PlayerAnimationKeys.WALK_DOWN_LEFT,
+                key: PlayerAnimation.WALK_DOWN_LEFT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [6, 7, 8, 9] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             walUpRight: this.scene.anims.create({
-                key: PlayerAnimationKeys.WALK_UP_RIGHT,
+                key: PlayerAnimation.WALK_UP_RIGHT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [11, 12, 13, 14] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
             }) as Phaser.Animations.Animation,
             walkUpLeft: this.scene.anims.create({
-                key: PlayerAnimationKeys.WALK_UP_LEFT,
+                key: PlayerAnimation.WALK_UP_LEFT,
                 frames: this.scene.anims.generateFrameNumbers('nadia', { frames: [16, 17, 18, 19] }),
                 frameRate: PLAYER_FRAMERATE,
                 repeat: -1
@@ -244,11 +246,12 @@ export class Player {
             this.walkSounds[getRandomInt(this.walkSounds.length)].play();
         }
         if (this.stepSoundInterval < 350) {
-            this.stepSoundInterval += delta
+            this.stepSoundInterval += delta;
         } else {
             this.stepSoundInterval = 0;
         }
     }
+
     get sprite(): Phaser.Physics.Matter.Sprite {
         return this.playerSprite;
     }
