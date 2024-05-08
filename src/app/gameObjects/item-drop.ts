@@ -2,7 +2,7 @@ import { CollisionCategory } from '../enums/collision-category';
 import { MetaConfiguration } from '../models/meta-configuration';
 import { getRandomInt } from "../configuration/constants";
 
-export class ItemDrop extends Phaser.Physics.Matter.Image {
+export class ItemDrop extends Phaser.Physics.Matter.Sprite {
 
     private timeUntillActiveAfterSpawn = 1500;
     private activeForCollecting = false;
