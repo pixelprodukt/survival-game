@@ -13,7 +13,7 @@ export class ItemDropPool extends Phaser.GameObjects.Group {
     spawn(x = 0, y = 0, key: string = 'wood_drop'): void {
 
 		const spawnExisting = this.countActive(false) > 0;
-		const drop = super.get(x, y, key);
+		const drop = super.get(x, y, key) as ItemDrop;
 
         drop.init(key, this.despawn);
         
